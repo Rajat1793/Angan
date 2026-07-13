@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ToastHost } from '@/components/ui';
 import { queryClient } from '@/lib/query';
 
 export default function RootLayout() {
@@ -24,6 +25,7 @@ export default function RootLayout() {
               <Stack.Screen name="(guard)" />
               <Stack.Screen name="(admin)" />
             </Stack>
+            <ToastHost />
           </BottomSheetModalProvider>
         </SafeAreaProvider>
       </QueryClientProvider>

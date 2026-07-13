@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+
+# expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# native
+ios/
+android/
+*.orig.*
+
+# secrets — never commit
+.env
+.env.local
+*.keystore
+google-services.json
+GoogleService-Info.plist
+
+# misc
+.DS_Store
+npm-debug.*
+*.log
+.vscode/
