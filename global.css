@@ -1,0 +1,24 @@
+/* Global stylesheet — Angan color tokens for light and dark schemes. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode: primary, muted, background, foreground (RGB channels). */
+    --color-primary: 62 72 29; /* #3E481D */
+    --color-muted: 27 28 21; /* #1B1C15 @ 10% via /10 */
+    --color-background: 252 253 243; /* #FCFDF3 */
+    --color-foreground: 27 28 21; /* #1B1C15 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Dark mode: palette inverts cleanly against light. */
+      --color-primary: 192 203 169; /* #C0CBA9 */
+      --color-muted: 226 227 218; /* #E2E3DA @ 20% via /20 */
+      --color-background: 27 28 21; /* #1B1C15 */
+      --color-foreground: 226 227 218; /* #E2E3DA */
+    }
+  }
+}
