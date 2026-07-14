@@ -1,6 +1,24 @@
-// Guard tab group; concrete tabs are defined in Phase 2.
-import { Stack } from 'expo-router';
+// Guard tabs: Gate · Visitors · History · Alerts (register is a hidden route).
+import { Tabs } from 'expo-router';
+
+import { useTheme } from '@/hooks/useTheme';
 
 export default function GuardLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  const { colors } = useTheme();
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarStyle: { backgroundColor: colors.background },
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: 'Gate' }} />
+      <Tabs.Screen name="visitors" options={{ title: 'Visitors' }} />
+      <Tabs.Screen name="history" options={{ title: 'History' }} />
+      <Tabs.Screen name="alerts" options={{ title: 'Alerts' }} />
+      {/* Register is opened from the Gate FAB, not shown as a tab. */}
+      <Tabs.Screen name="register" options={{ href: null }} />
+    </Tabs>
+  );
 }

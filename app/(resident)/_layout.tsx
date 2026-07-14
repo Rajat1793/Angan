@@ -1,6 +1,23 @@
-// Resident tab group; concrete tabs are defined in Phase 2.
-import { Stack } from 'expo-router';
+// Resident tabs: Home · Approvals · Community · Payments · Profile.
+import { Tabs } from 'expo-router';
+
+import { useTheme } from '@/hooks/useTheme';
 
 export default function ResidentLayout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  const { colors } = useTheme();
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarStyle: { backgroundColor: colors.background },
+      }}
+    >
+      <Tabs.Screen name="index" options={{ title: 'Home' }} />
+      <Tabs.Screen name="approvals" options={{ title: 'Approvals' }} />
+      <Tabs.Screen name="community" options={{ title: 'Community' }} />
+      <Tabs.Screen name="payments" options={{ title: 'Payments' }} />
+      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+    </Tabs>
+  );
 }

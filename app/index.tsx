@@ -1,7 +1,7 @@
-// App entry: sends users to the auth group until session-based routing lands.
-import { Redirect } from 'expo-router';
+// App entry: shows a spinner while the root AuthGate resolves routing.
+import { Loading } from '@/components/ui';
 
 export default function Index() {
-  // Temporary landing redirect; replaced by role-aware routing in Phase 2.
-  return <Redirect href="/(auth)/login" />;
+  // Actual redirect is handled centrally by AuthGate in the root layout.
+  return <Loading label="Starting Angan…" />;
 }
