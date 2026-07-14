@@ -1,14 +1,7 @@
-// Auth store scaffold: holds session/profile; wired to Supabase in Phase 1.
+// Auth store: holds Supabase session + profile and hydration state.
 import { create } from 'zustand';
 
-// Minimal profile shape; expanded when the schema lands.
-export interface Profile {
-  id: string;
-  role: 'resident' | 'guard' | 'admin';
-  society_id: string;
-  full_name?: string;
-  flat_id?: string | null;
-}
+import type { Profile } from '@/lib/database.types';
 
 interface AuthState {
   session: unknown | null;
