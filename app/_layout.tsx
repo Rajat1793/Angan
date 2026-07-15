@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Loading, ToastHost } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotifications } from '@/hooks/useNotifications';
 import { queryClient } from '@/lib/query';
 
 // Redirects users to the correct group based on session + profile role.
@@ -18,6 +19,9 @@ function AuthGate() {
   const { session, profile, hydrating } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+
+  // Register for push once a profile is available.
+  useNotifications();
 
   useEffect(() => {
     if (hydrating) return;
