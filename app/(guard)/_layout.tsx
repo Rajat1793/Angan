@@ -17,8 +17,9 @@ export default function GuardLayout() {
       <Tabs.Screen name="visitors" options={{ title: 'Visitors' }} />
       <Tabs.Screen name="history" options={{ title: 'History' }} />
       <Tabs.Screen name="alerts" options={{ title: 'Alerts' }} />
-      {/* Register is opened from the Gate FAB, not shown as a tab. */}
+      {/* Register + verify are opened from actions, not shown as tabs. */}
       <Tabs.Screen name="register" options={{ href: null }} />
+      <Tabs.Screen name="verify" options={{ href: null }} />
     </Tabs>
   );
 }

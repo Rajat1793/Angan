@@ -60,6 +60,14 @@ export default function GuardGate() {
       >
         <Text className="text-2xl font-bold text-background">+</Text>
       </Pressable>
+
+      {/* Secondary action to verify a pre-approved guest pass. */}
+      <Pressable
+        onPress={() => router.push('/(guard)/verify')}
+        className="absolute bottom-6 left-6 h-14 items-center justify-center rounded-full bg-muted/10 px-5"
+      >
+        <Text className="text-sm font-semibold text-foreground">Verify pass</Text>
+      </Pressable>
     </ScreenScaffold>
   );
 }

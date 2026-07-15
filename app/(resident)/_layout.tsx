@@ -18,6 +18,8 @@ export default function ResidentLayout() {
       <Tabs.Screen name="community" options={{ title: 'Community' }} />
       <Tabs.Screen name="payments" options={{ title: 'Payments' }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      {/* Pre-approval is opened from Approvals, not shown as a tab. */}
+      <Tabs.Screen name="preapprove" options={{ href: null }} />
     </Tabs>
   );
 }

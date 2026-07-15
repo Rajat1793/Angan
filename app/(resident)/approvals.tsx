@@ -2,10 +2,11 @@
 import type BottomSheet from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { Empty, ErrorState, Loading, useToast } from '@/components/ui';
+import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { ApprovalSheet } from '@/components/visitor/ApprovalSheet';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
@@ -45,6 +46,14 @@ export default function Approvals() {
 
   return (
     <ScreenScaffold title="Approvals">
+      {/* Shortcut to pre-authorize an expected guest with a QR/OTP pass. */}
+      <View className="px-4 pt-3">
+        <Button
+          label="Pre-approve a guest"
+          variant="outline"
+          onPress={() => router.push('/(resident)/preapprove')}
+        />
+      </View>
       {isLoading ? (
         <Loading />
       ) : isError ? (
