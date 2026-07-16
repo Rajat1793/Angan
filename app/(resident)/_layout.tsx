@@ -23,6 +23,8 @@ export default function ResidentLayout() {
       {/* Helpdesk + ticket detail are opened from Community/Home. */}
       <Tabs.Screen name="helpdesk" options={{ href: null }} />
       <Tabs.Screen name="ticket/[id]" options={{ href: null }} />
+      {/* Amenities booking opened from Home. */}
+      <Tabs.Screen name="amenities" options={{ href: null }} />
     </Tabs>
   );
 }
