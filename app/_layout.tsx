@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Loading, ToastHost } from '@/components/ui';
+import { ConnectivityBanner } from '@/components/shared/ConnectivityBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
 import { queryClient } from '@/lib/query';
@@ -64,6 +65,7 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <BottomSheetModalProvider>
             <StatusBar style="auto" />
+            <ConnectivityBanner />
             <AuthGate />
             <ToastHost />
           </BottomSheetModalProvider>

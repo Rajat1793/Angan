@@ -13,6 +13,7 @@ import { uploadVisitorPhoto } from '@/lib/storage';
 import { createVisitor } from '@/lib/visitors';
 import { visitorSchema, type VisitorInput } from '@/lib/validation';
 import { useAuthStore } from '@/store/auth.store';
+import { useOfflineStore } from '@/store/offline.store';
 
 const TYPES: VisitorInput['type'][] = ['delivery', 'cab', 'guest', 'service'];
 
@@ -20,6 +21,7 @@ export default function Register() {
   const profile = useAuthStore((s) => s.profile);
   const toast = useToast((s) => s.show);
   const queryClient = useQueryClient();
+  const enqueue = useOfflineStore((s) => s.enqueue);
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -54,7 +56,17 @@ export default function Register() {
       toast('Visitor registered', 'success');
       router.back();
     } catch (e) {
-      toast((e as Error).message ?? 'Could not register', 'error');
+      // On network failure, queue the registration to sync on reconnect.
+      enqueue({
+        localId: `${Date.now()}`,
+        input: values,
+        societyId: profile.society_id,
+        flatId: profile.flat_id,
+        createdBy: profile.id,
+        createdAt: Date.now(),
+      });
+      toast('Saved offline — will sync when online', 'info');
+      router.back();
     } finally {
       setSaving(false);
     }
