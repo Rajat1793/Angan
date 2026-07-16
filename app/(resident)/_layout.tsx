@@ -20,6 +20,9 @@ export default function ResidentLayout() {
       <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
       {/* Pre-approval is opened from Approvals, not shown as a tab. */}
       <Tabs.Screen name="preapprove" options={{ href: null }} />
+      {/* Helpdesk + ticket detail are opened from Community/Home. */}
+      <Tabs.Screen name="helpdesk" options={{ href: null }} />
+      <Tabs.Screen name="ticket/[id]" options={{ href: null }} />
     </Tabs>
   );
 }
