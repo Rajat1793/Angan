@@ -10,6 +10,7 @@ const extra = Constants.expoConfig?.extra ?? {};
 const supabaseUrl =
   process.env.EXPO_PUBLIC_SUPABASE_URL ?? (extra.supabaseUrl as string) ?? '';
 const supabaseAnonKey =
+  process.env.EXPO_PUBLIC_SUPABASE_KEY ??
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ??
   (extra.supabaseAnonKey as string) ??
   '';
