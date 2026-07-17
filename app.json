@@ -4,12 +4,10 @@
     "slug": "angan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "scheme": "angan",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FCFDF3"
     },
@@ -21,7 +19,6 @@
     "android": {
       "package": "app.angan.mobile",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FCFDF3"
       },
       "permissions": ["CAMERA", "INTERNET"]

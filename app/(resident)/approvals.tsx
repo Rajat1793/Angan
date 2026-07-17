@@ -12,6 +12,7 @@ import { ApprovalSheet } from '@/components/visitor/ApprovalSheet';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
 import { useVisitors } from '@/hooks/useVisitors';
 import type { Visitor } from '@/lib/database.types';
+import { hapticSuccess, hapticWarning } from '@/lib/haptics';
 import { setVisitorDecision } from '@/lib/visitors';
 
 export default function Approvals() {
@@ -35,6 +36,9 @@ export default function Approvals() {
     try {
       await setVisitorDecision(selected.id, approved);
       queryClient.invalidateQueries({ queryKey: ['visitors'] });
+      // Tactile confirmation matches the visual toast.
+      if (approved) hapticSuccess();
+      else hapticWarning();
       toast(approved ? 'Approved' : 'Denied', approved ? 'success' : 'info');
       sheetRef.current?.close();
     } catch (e) {
