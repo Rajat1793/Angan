@@ -1,18 +1,30 @@
 // Guard visitors-inside tab: realtime list with a Mark Exit action.
+import type BottomSheet from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
 import { Text } from 'react-native';
 
 import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
+import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
 import { useVisitors } from '@/hooks/useVisitors';
+import type { Visitor } from '@/lib/database.types';
 import { markExit } from '@/lib/visitors';
 
 export default function GuardVisitors() {
   const { data, isLoading, isError, refetch } = useVisitors(['inside']);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
+  const sheetRef = useRef<BottomSheet>(null);
+  const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Open the detail sheet for a tapped visitor.
+  const openDetail = (visitor: Visitor) => {
+    setSelected(visitor);
+    sheetRef.current?.expand();
+  };
 
   // Mark exit stamps exit time and moves the visitor to history.
   const exit = async (id: string) => {
@@ -40,12 +52,14 @@ export default function GuardVisitors() {
           contentContainerStyle={{ padding: 16 }}
           ItemSeparatorComponent={() => <Text className="h-3" />}
           renderItem={({ item }) => (
-            <VisitorCard visitor={item}>
+            <VisitorCard visitor={item} onPress={() => openDetail(item)}>
               <Button label="Mark exit" variant="outline" onPress={() => exit(item.id)} />
             </VisitorCard>
           )}
         />
       )}
+
+      <VisitorDetailSheet ref={sheetRef} visitor={selected} />
     </ScreenScaffold>
   );
 }

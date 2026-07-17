@@ -1,5 +1,5 @@
 // useRealtime: subscribe to a society-scoped Postgres changes channel.
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { supabase } from '@/lib/supabase';
 
@@ -9,10 +9,13 @@ export function useRealtime(
   societyId: string | null | undefined,
   onChange: () => void,
 ) {
+  // Unique per hook instance so multiple lists never collide on channel names.
+  const instanceId = useRef(Math.random().toString(36).slice(2)).current;
+
   useEffect(() => {
     if (!societyId) return;
     const channel = supabase
-      .channel(`${table}:${societyId}`)
+      .channel(`${table}:${societyId}:${instanceId}`)
       .on(
         'postgres_changes',
         {
@@ -29,5 +32,5 @@ export function useRealtime(
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [table, societyId, onChange]);
+  }, [table, societyId, onChange, instanceId]);
 }

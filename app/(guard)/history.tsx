@@ -1,16 +1,27 @@
 // Guard history tab: exited/denied visitors with a name/phone search filter.
+import type BottomSheet from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { Empty, ErrorState, Input, Loading } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
+import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
 import { useVisitors } from '@/hooks/useVisitors';
+import type { Visitor } from '@/lib/database.types';
 
 export default function GuardHistory() {
   const { data, isLoading, isError, refetch } = useVisitors(['exited', 'denied']);
   const [query, setQuery] = useState('');
+  const sheetRef = useRef<BottomSheet>(null);
+  const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Open the detail sheet for a tapped visitor.
+  const openDetail = (visitor: Visitor) => {
+    setSelected(visitor);
+    sheetRef.current?.expand();
+  };
 
   // Client-side filter over the fetched page by name or phone.
   const filtered = useMemo(() => {
@@ -38,9 +49,13 @@ export default function GuardHistory() {
           keyExtractor={(v) => v.id}
           contentContainerStyle={{ padding: 16 }}
           ItemSeparatorComponent={() => <Text className="h-3" />}
-          renderItem={({ item }) => <VisitorCard visitor={item} />}
+          renderItem={({ item }) => (
+            <VisitorCard visitor={item} onPress={() => openDetail(item)} />
+          )}
         />
       )}
+
+      <VisitorDetailSheet ref={sheetRef} visitor={selected} />
     </ScreenScaffold>
   );
 }

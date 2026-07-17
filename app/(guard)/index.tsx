@@ -1,13 +1,17 @@
 // Guard gate: live pending/approved queue (realtime) + Register FAB.
+import type BottomSheet from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { useRef, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 
 import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
+import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
 import { useVisitors } from '@/hooks/useVisitors';
+import type { Visitor } from '@/lib/database.types';
 import { markEntry } from '@/lib/visitors';
 
 export default function GuardGate() {
@@ -15,6 +19,14 @@ export default function GuardGate() {
   const { data, isLoading, isError, refetch } = useVisitors(['pending', 'approved']);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
+  const sheetRef = useRef<BottomSheet>(null);
+  const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Open the detail sheet for a tapped visitor.
+  const openDetail = (visitor: Visitor) => {
+    setSelected(visitor);
+    sheetRef.current?.expand();
+  };
 
   // Only approved visitors can be marked as entered.
   const enter = async (id: string) => {
@@ -42,7 +54,7 @@ export default function GuardGate() {
           contentContainerStyle={{ padding: 16 }}
           ItemSeparatorComponent={() => <Text className="h-3" />}
           renderItem={({ item }) => (
-            <VisitorCard visitor={item}>
+            <VisitorCard visitor={item} onPress={() => openDetail(item)}>
               {item.status === 'approved' ? (
                 <Button label="Mark entry" onPress={() => enter(item.id)} />
               ) : (
@@ -68,6 +80,8 @@ export default function GuardGate() {
       >
         <Text className="text-sm font-semibold text-foreground">Verify pass</Text>
       </Pressable>
+
+      <VisitorDetailSheet ref={sheetRef} visitor={selected} />
     </ScreenScaffold>
   );
 }
