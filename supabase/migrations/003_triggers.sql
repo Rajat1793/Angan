@@ -15,8 +15,14 @@ set search_path = public
 as $$
 declare
   resident_ids uuid[];
+  fn_url text := current_setting('app.functions_url', true);
 begin
   if new.status <> 'pending' then
+    return new;
+  end if;
+
+  -- Skip push when the function URL isn't configured (e.g. fresh project).
+  if fn_url is null or fn_url = '' then
     return new;
   end if;
 
@@ -26,7 +32,7 @@ begin
   where flat_id = new.flat_id and role = 'resident';
 
   perform net.http_post(
-    url := current_setting('app.functions_url', true) || '/send-push-notification',
+    url := fn_url || '/send-push-notification',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'Authorization', 'Bearer ' || current_setting('app.service_key', true)
@@ -54,9 +60,16 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  fn_url text := current_setting('app.functions_url', true);
 begin
+  -- Skip push when the function URL isn't configured (e.g. fresh project).
+  if fn_url is null or fn_url = '' then
+    return new;
+  end if;
+
   perform net.http_post(
-    url := current_setting('app.functions_url', true) || '/send-push-notification',
+    url := fn_url || '/send-push-notification',
     headers := jsonb_build_object(
       'Content-Type', 'application/json',
       'Authorization', 'Bearer ' || current_setting('app.service_key', true)
