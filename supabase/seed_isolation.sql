@@ -12,9 +12,11 @@ insert into flats (id, society_id, tower_id, number) values
 -- Second-society admin: used to verify RLS blocks cross-tenant reads.
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password,
-  email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at
+  email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+  confirmation_token, recovery_token, email_change,
+  email_change_token_new, reauthentication_token
 ) values
-  ('00000000-0000-0000-0000-000000000000', '99999999-2222-0000-0000-000000000001', 'authenticated', 'authenticated', 'admin2@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bela Admin"}', now(), now());
+  ('00000000-0000-0000-0000-000000000000', '99999999-2222-0000-0000-000000000001', 'authenticated', 'authenticated', 'admin2@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Bela Admin"}', now(), now(), '', '', '', '', '');
 
 update profiles
 set society_id = '99999999-9999-9999-9999-999999999999', role = 'admin', full_name = 'Bela Admin'

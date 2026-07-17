@@ -669,14 +669,17 @@ insert into flats (id, society_id, tower_id, number) values
   ('33333333-0000-0000-0000-000000000008', '11111111-1111-1111-1111-111111111111', '22222222-0000-0000-0000-000000000002', 'B-202');
 
 -- Demo auth users. Passwords all "Demo@1234" (bcrypt via pgcrypto). --------
+-- Token columns default to '' because GoTrue cannot scan NULLs at login.
 insert into auth.users (
   instance_id, id, aud, role, email, encrypted_password,
   email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
-  created_at, updated_at
+  created_at, updated_at,
+  confirmation_token, recovery_token, email_change,
+  email_change_token_new, reauthentication_token
 ) values
-  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000001', 'authenticated', 'authenticated', 'resident@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Riya Resident"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'guard@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Gopal Guard"}', now(), now()),
-  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000003', 'authenticated', 'authenticated', 'admin@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Asha Admin"}', now(), now());
+  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000001', 'authenticated', 'authenticated', 'resident@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Riya Resident"}', now(), now(), '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000002', 'authenticated', 'authenticated', 'guard@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Gopal Guard"}', now(), now(), '', '', '', '', ''),
+  ('00000000-0000-0000-0000-000000000000', '44444444-0000-0000-0000-000000000003', 'authenticated', 'authenticated', 'admin@angan.app', crypt('Demo@1234', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{"full_name":"Asha Admin"}', now(), now(), '', '', '', '', '');
 
 -- The signup trigger inserts profile rows; update them with role + tenancy.
 update profiles set society_id = '11111111-1111-1111-1111-111111111111', flat_id = '33333333-0000-0000-0000-000000000001', role = 'resident', full_name = 'Riya Resident'
