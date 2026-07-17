@@ -5,6 +5,9 @@ import * as Notifications from 'expo-notifications';
 
 import { supabase } from './supabase';
 
+// Expo Go (SDK 53+) dropped remote push; only dev/standalone builds support it.
+export const isExpoGo = Constants.appOwnership === 'expo';
+
 // Foreground alerts show a banner + play a sound.
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -15,9 +18,10 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Register for push and return the Expo token (null on simulators/denied).
+// Register for push and return the Expo token (null on Expo Go/simulator/denied).
 export async function registerForPush(): Promise<string | null> {
-  if (!Device.isDevice) return null;
+  // Skip in Expo Go where getExpoPushTokenAsync throws on Android.
+  if (isExpoGo || !Device.isDevice) return null;
 
   const { status: existing } = await Notifications.getPermissionsAsync();
   let status = existing;
