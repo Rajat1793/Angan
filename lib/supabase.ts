@@ -14,6 +14,9 @@ const supabaseAnonKey =
   (extra.supabaseAnonKey as string) ??
   '';
 
+// True only when both public env values are present.
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+
 // SecureStore has a size limit and is native-only; fall back to AsyncStorage.
 const SecureStoreAdapter = {
   getItem: (key: string) => SecureStore.getItemAsync(key),
@@ -21,11 +24,16 @@ const SecureStoreAdapter = {
   removeItem: (key: string) => SecureStore.deleteItemAsync(key),
 };
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: Platform.OS === 'web' ? AsyncStorage : SecureStoreAdapter,
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: false,
+// Use placeholders when unconfigured so createClient never throws at import.
+export const supabase = createClient(
+  isSupabaseConfigured ? supabaseUrl : 'https://placeholder.supabase.co',
+  isSupabaseConfigured ? supabaseAnonKey : 'placeholder-anon-key',
+  {
+    auth: {
+      storage: Platform.OS === 'web' ? AsyncStorage : SecureStoreAdapter,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false,
+    },
   },
-});
+);

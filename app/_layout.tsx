@@ -10,9 +10,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { Loading, ToastHost } from '@/components/ui';
+import { ConfigNotice } from '@/components/shared/ConfigNotice';
 import { ConnectivityBanner } from '@/components/shared/ConnectivityBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { queryClient } from '@/lib/query';
 
 // Redirects users to the correct group based on session + profile role.
@@ -66,7 +68,7 @@ export default function RootLayout() {
           <BottomSheetModalProvider>
             <StatusBar style="auto" />
             <ConnectivityBanner />
-            <AuthGate />
+            {isSupabaseConfigured ? <AuthGate /> : <ConfigNotice />}
             <ToastHost />
           </BottomSheetModalProvider>
         </SafeAreaProvider>
