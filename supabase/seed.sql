@@ -1,5 +1,4 @@
--- seed.sql — demo data for Angan. Idempotent-ish: safe to run on a fresh db.
--- Creates 1 society, 2 towers, ~8 flats, 3 demo users, and sample content.
+-- seed.sql — demo data for Angan (1 society, 2 towers, ~8 flats, 3 users, samples).
 
 -- Fixed UUIDs so relationships stay stable across re-seeds.
 -- Society + towers + flats -------------------------------------------------

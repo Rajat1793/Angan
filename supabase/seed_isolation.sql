@@ -1,5 +1,4 @@
--- seed_isolation.sql — optional 2nd society to prove tenant isolation.
--- Run AFTER seed.sql. A 2nd-society admin must see none of Angan Greens' data.
+-- seed_isolation.sql — optional 2nd society to prove tenant isolation (run after seed.sql).
 
 insert into societies (id, name, address) values
   ('99999999-9999-9999-9999-999999999999', 'Riverside Court', '9 River Road');
@@ -21,5 +20,4 @@ update profiles
 set society_id = '99999999-9999-9999-9999-999999999999', role = 'admin', full_name = 'Bela Admin'
 where id = '99999999-2222-0000-0000-000000000001';
 
--- Expectation: signed in as admin2@angan.app, dashboard_stats + all lists
--- return only Riverside Court data — never Angan Greens.
+-- Expectation: admin2@angan.app sees only Riverside Court data, never Angan Greens.

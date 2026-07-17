@@ -1,5 +1,4 @@
-// Razorpay checkout HTML: rendered inside a WebView for test-mode payments.
-// The page posts the payment result back to RN via window.ReactNativeWebView.
+// Razorpay checkout HTML rendered in a WebView; posts result back via ReactNativeWebView.
 export function buildCheckoutHtml(params: {
   keyId: string;
   orderId: string;

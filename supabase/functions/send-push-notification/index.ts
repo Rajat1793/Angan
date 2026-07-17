@@ -1,5 +1,4 @@
-// send-push-notification: Edge Function that fans out Expo push messages.
-// Invoked by DB triggers (visitor pending, notice publish) with a service role.
+// send-push-notification: Edge Function that fans out Expo push messages to recipients.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 interface PushRequest {

@@ -1,7 +1,6 @@
 -- 004_rpc.sql — server-side RPCs for pass verification and safe booking.
 
--- verify_pass: guard redeems a pre-approved guest pass by code or OTP.
--- Runs as definer but re-checks the caller's society to stay tenant-safe.
+-- verify_pass: guard redeems a pre-approved guest pass by code or OTP (re-checks society).
 create or replace function verify_pass(p_code text)
 returns visitors
 language plpgsql

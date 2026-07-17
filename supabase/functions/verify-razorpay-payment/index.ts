@@ -1,5 +1,4 @@
-// verify-razorpay-payment: validates the payment signature server-side,
-// then marks the due paid and writes payment history (service role).
+// verify-razorpay-payment: validates the payment signature then marks the due paid.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { createHmac } from 'node:crypto';
 

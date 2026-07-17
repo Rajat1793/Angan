@@ -1,5 +1,4 @@
-// create-razorpay-order: creates a test-mode order for a maintenance due.
-// Razorpay key secret stays in Edge Function secrets, never on the client.
+// create-razorpay-order: creates a test-mode Razorpay order for a maintenance due.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 Deno.serve(async (req) => {

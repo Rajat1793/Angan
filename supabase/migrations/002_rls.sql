@@ -1,5 +1,4 @@
--- 002_rls.sql — Row Level Security. Deny by default; society_id is the boundary.
--- Role is read from profiles (server-side), never trusted from the client.
+-- 002_rls.sql — Row Level Security; deny by default, society_id is the boundary.
 
 -- SECURITY DEFINER helpers resolve the caller's society and role once.
 create or replace function auth_society_id()

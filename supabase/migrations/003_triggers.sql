@@ -1,5 +1,4 @@
--- 003_triggers.sql — server-driven push on gate + notice events.
--- Uses pg_net to call the send-push-notification Edge Function asynchronously.
+-- 003_triggers.sql — server-driven push on gate + notice events via pg_net.
 
 -- pg_net ships with Supabase; enable it for outbound HTTP from Postgres.
 create extension if not exists pg_net;

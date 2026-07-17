@@ -1,5 +1,4 @@
--- 001_schema.sql — Angan core schema. Every tenant table carries society_id.
--- Order matters: enums → societies → dependents → gate/community/payments.
+-- 001_schema.sql — Angan core schema; every tenant table carries society_id.
 
 -- Enums used across the domain.
 create type user_role as enum ('resident', 'guard', 'admin');
