@@ -26,19 +26,19 @@ function BigTile({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-1 justify-between rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:opacity-70"
+      className="flex-1 items-center justify-center gap-4 rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:opacity-70"
     >
-      <View className="h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
-        <Ionicons name={icon} size={28} color="#3E481D" />
+      <View className="h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
+        <Ionicons name={icon} size={40} color="#3E481D" />
         {badge ? (
           <View className="absolute -right-1.5 -top-1.5 h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1">
             <Text className="text-xs font-bold text-white">{badge}</Text>
           </View>
         ) : null}
       </View>
-      <View>
+      <View className="items-center">
         <Text className="text-xl font-bold text-foreground">{title}</Text>
-        <Text className="text-sm text-foreground/50">{subtitle}</Text>
+        <Text className="mt-0.5 text-center text-sm text-foreground/50">{subtitle}</Text>
       </View>
     </Pressable>
   );
