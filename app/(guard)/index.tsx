@@ -1,71 +1,73 @@
-// Guard dashboard: overview stats, quick actions, and a recent visitor queue.
-import type { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { useQueryClient } from '@tanstack/react-query';
-import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+// Guard dashboard (Gate): full-screen overview and large quick-action tiles.
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useMemo } from 'react';
+import { Pressable, Text, View } from 'react-native';
 
-import {
-  Button,
-  Empty,
-  ErrorState,
-  ListRow,
-  Loading,
-  SectionHeader,
-  StatStrip,
-  useToast,
-} from '@/components/ui';
+import { ErrorState, Loading } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
-import { VisitorCard } from '@/components/visitor/VisitorCard';
-import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
 import { useAuth } from '@/hooks/useAuth';
 import { useVisitors } from '@/hooks/useVisitors';
-import type { Visitor } from '@/lib/database.types';
-import { markEntry } from '@/lib/visitors';
+
+// A large tappable action tile that grows to fill the grid.
+function BigTile({
+  icon,
+  title,
+  subtitle,
+  onPress,
+  badge,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  subtitle: string;
+  onPress: () => void;
+  badge?: number;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className="flex-1 justify-between rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:opacity-70"
+    >
+      <View className="h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
+        <Ionicons name={icon} size={28} color="#3E481D" />
+        {badge ? (
+          <View className="absolute -right-1.5 -top-1.5 h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1">
+            <Text className="text-xs font-bold text-white">{badge}</Text>
+          </View>
+        ) : null}
+      </View>
+      <View>
+        <Text className="text-xl font-bold text-foreground">{title}</Text>
+        <Text className="text-sm text-foreground/50">{subtitle}</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 export default function GuardDashboard() {
   const { profile } = useAuth();
-  // One query drives both the overview counts and the recent queue.
+  // One query drives the overview counts and the "inside" badge.
   const { data, isLoading, isError, refetch } = useVisitors([
     'pending',
     'approved',
     'inside',
     'exited',
   ]);
-  const queryClient = useQueryClient();
-  const toast = useToast((s) => s.show);
-  const sheetRef = useRef<BottomSheetModal>(null);
-  const [selected, setSelected] = useState<Visitor | null>(null);
 
-  // Close the detail sheet whenever this tab loses focus.
-  useFocusEffect(useCallback(() => () => sheetRef.current?.dismiss(), []));
-
-  // Derive headline counts and the pending/approved queue from one dataset.
-  const { visitors, entered, exited, queue } = useMemo(() => {
+  // Derive headline counts from the dataset.
+  const { overview, insideNow } = useMemo(() => {
     const all = data ?? [];
+    const entered = all.filter((v) => v.status === 'inside' || v.status === 'exited').length;
+    const exited = all.filter((v) => v.status === 'exited').length;
     return {
-      visitors: all.length,
-      entered: all.filter((v) => v.status === 'inside' || v.status === 'exited').length,
-      exited: all.filter((v) => v.status === 'exited').length,
-      queue: all.filter((v) => v.status === 'pending' || v.status === 'approved'),
+      overview: [
+        { label: 'Visitors', value: all.length },
+        { label: 'Entered', value: entered },
+        { label: 'Exited', value: exited },
+      ],
+      insideNow: entered - exited,
     };
   }, [data]);
-
-  const openDetail = (visitor: Visitor) => {
-    setSelected(visitor);
-    sheetRef.current?.present();
-  };
-
-  // Only approved visitors can be marked as entered.
-  const enter = async (id: string) => {
-    try {
-      await markEntry(id);
-      queryClient.invalidateQueries({ queryKey: ['visitors'] });
-      toast('Marked entry', 'success');
-    } catch (e) {
-      toast((e as Error).message ?? 'Failed', 'error');
-    }
-  };
 
   if (isLoading) return <Loading />;
   if (isError) return <ErrorState onRetry={refetch} />;
@@ -76,64 +78,60 @@ export default function GuardDashboard() {
       subtitle={`Hi, ${profile?.full_name?.split(' ')[0] ?? 'Guard'} 👋`}
       rightIcon="notifications-outline"
     >
-      <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
-        <StatStrip
-          title="Today's overview"
-          stats={[
-            { label: 'Visitors', value: String(visitors).padStart(2, '0') },
-            { label: 'Entered', value: String(entered).padStart(2, '0') },
-            { label: 'Exited', value: String(exited).padStart(2, '0') },
-          ]}
-        />
-
-        <View className="gap-3">
-          <SectionHeader title="Quick actions" />
-          <ListRow
-            icon="person-add"
-            title="Register visitor"
-            subtitle="Add a new visitor at the gate"
-            onPress={() => router.push('/(guard)/register')}
-          />
-          <ListRow
-            icon="qr-code"
-            title="Verify pass"
-            subtitle="Scan QR or enter OTP"
-            onPress={() => router.push('/(guard)/verify')}
-          />
-          <ListRow
-            icon="people"
-            title="Visitors inside"
-            subtitle="See who is currently inside"
-            badge={entered - exited > 0 ? entered - exited : undefined}
-            onPress={() => router.push('/(guard)/visitors')}
-          />
-          <ListRow
-            icon="time"
-            title="Entry / exit log"
-            subtitle="View visitor history"
-            onPress={() => router.push('/(guard)/history')}
-          />
+      <View className="flex-1 gap-4 p-5">
+        {/* Enlarged overview card. */}
+        <View className="rounded-3xl bg-primary p-6 shadow-sm">
+          <Text className="mb-4 text-xs font-medium uppercase tracking-wide text-background/70">
+            Today's overview
+          </Text>
+          <View className="flex-row">
+            {overview.map((s, i) => (
+              <View
+                key={s.label}
+                className={`flex-1 items-center ${i > 0 ? 'border-l border-background/20' : ''}`}
+              >
+                <Text className="text-4xl font-bold text-background">
+                  {String(s.value).padStart(2, '0')}
+                </Text>
+                <Text className="mt-1 text-xs text-background/70">{s.label}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
-        <View className="gap-3">
-          <SectionHeader title="Recent visitors" />
-          {queue.length === 0 ? (
-            <Empty title="Queue is clear" hint="Register a visitor to start the flow." />
-          ) : (
-            queue.map((item) => (
-              <VisitorCard key={item.id} visitor={item} onPress={() => openDetail(item)}>
-                {item.status === 'approved' ? (
-                  <Button label="Mark entry" onPress={() => enter(item.id)} />
-                ) : (
-                  <Text className="text-xs text-foreground/50">Waiting for resident…</Text>
-                )}
-              </VisitorCard>
-            ))
-          )}
+        {/* Large action tiles fill the remaining screen height. */}
+        <View className="flex-1 gap-4">
+          <View className="flex-1 flex-row gap-4">
+            <BigTile
+              icon="person-add"
+              title="Register"
+              subtitle="Add a visitor at the gate"
+              onPress={() => router.push('/(guard)/register')}
+            />
+            <BigTile
+              icon="qr-code"
+              title="Verify"
+              subtitle="Scan QR or enter OTP"
+              onPress={() => router.push('/(guard)/verify')}
+            />
+          </View>
+          <View className="flex-1 flex-row gap-4">
+            <BigTile
+              icon="people"
+              title="Visitors"
+              subtitle="Browse & filter by status"
+              badge={insideNow > 0 ? insideNow : undefined}
+              onPress={() => router.push('/(guard)/visitors')}
+            />
+            <BigTile
+              icon="time"
+              title="History"
+              subtitle="Entry / exit log"
+              onPress={() => router.push('/(guard)/history')}
+            />
+          </View>
         </View>
-      </ScrollView>
-
-      <VisitorDetailSheet ref={sheetRef} visitor={selected} />
+      </View>
     </ScreenScaffold>
   );
 }
