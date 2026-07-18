@@ -13,17 +13,31 @@ export function useAuth() {
     // Load any persisted session on mount, then fetch the profile.
     let active = true;
     (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!active) return;
-      setSession(data.session);
-      if (data.session?.user) {
-        try {
-          setProfile(await fetchProfile(data.session.user.id));
-        } catch {
-          setProfile(null);
+      try {
+        // Race getSession against a timeout so a stalled call never blocks boot.
+        const result = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise<{ data: { session: null } }>((resolve) =>
+            setTimeout(() => resolve({ data: { session: null } }), 8000),
+          ),
+        ]);
+        if (!active) return;
+        const session = result.data.session;
+        setSession(session);
+        if (session?.user) {
+          try {
+            setProfile(await fetchProfile(session.user.id));
+          } catch {
+            setProfile(null);
+          }
         }
+      } catch {
+        // Treat any hydration failure as signed-out rather than hanging.
+        if (active) setSession(null);
+      } finally {
+        // Always finish hydration so the app can route to a screen.
+        if (active) setHydrating(false);
       }
-      setHydrating(false);
     })();
 
     // Keep store in sync with future auth changes (login/logout/refresh).

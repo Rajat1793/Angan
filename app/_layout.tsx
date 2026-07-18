@@ -28,7 +28,8 @@ function AuthGate() {
 
   useEffect(() => {
     if (hydrating) return;
-    const inAuth = segments[0] === '(auth)';
+    const group = segments[0];
+    const inAuth = group === '(auth)';
     // Signed out → force auth group.
     if (!session) {
       if (!inAuth) router.replace('/(auth)/login');
@@ -36,14 +37,19 @@ function AuthGate() {
     }
     // Signed in but profile incomplete → onboarding.
     if (profile && !profile.full_name) {
-      router.replace('/(auth)/onboarding');
+      if (group !== '(auth)') router.replace('/(auth)/onboarding');
       return;
     }
-    // Route by role once the profile is loaded.
-    if (profile && inAuth) {
-      if (profile.role === 'guard') router.replace('/(guard)');
-      else if (profile.role === 'admin') router.replace('/(admin)');
-      else router.replace('/(resident)');
+    // Signed in with a complete profile → ensure we're in the right role group.
+    // Covers cold boot from the root index as well as post-login from (auth).
+    if (profile) {
+      const target =
+        profile.role === 'guard'
+          ? '(guard)'
+          : profile.role === 'admin'
+            ? '(admin)'
+            : '(resident)';
+      if (group !== target) router.replace(`/${target}`);
     }
   }, [session, profile, hydrating, segments, router]);
 
