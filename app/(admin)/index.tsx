@@ -1,14 +1,46 @@
-// Admin dashboard: live society metrics + quick action to generate dues.
+// Admin dashboard: society overview stats + management shortcuts.
+import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
-import { Button, Card, ErrorState, Loading, useToast } from '@/components/ui';
+import {
+  Card,
+  ErrorState,
+  ListRow,
+  Loading,
+  SectionHeader,
+  useToast,
+} from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
+import { useAuth } from '@/hooks/useAuth';
 import { getDashboardStats } from '@/lib/admin';
 import { generateDues } from '@/lib/payments';
 
+// A single metric cell for the 2x2 overview grid.
+function StatCell({
+  icon,
+  label,
+  value,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  value: string | number;
+}) {
+  return (
+    <Card className="w-[47%] gap-1">
+      <View className="h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+        <Ionicons name={icon} size={18} color="#3E481D" />
+      </View>
+      <Text className="mt-1 text-2xl font-bold text-foreground">{value}</Text>
+      <Text className="text-xs text-foreground/60">{label}</Text>
+    </Card>
+  );
+}
+
 export default function AdminDashboard() {
+  const { profile } = useAuth();
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
   const [busy, setBusy] = useState(false);
@@ -32,26 +64,71 @@ export default function AdminDashboard() {
   if (stats.isLoading) return <Loading />;
   if (stats.isError) return <ErrorState onRetry={stats.refetch} />;
 
-  const cards = [
-    { label: 'Residents', value: stats.data?.residents ?? 0 },
-    { label: 'Open complaints', value: stats.data?.open_complaints ?? 0 },
-    { label: 'Visitors inside', value: stats.data?.visitors_inside ?? 0 },
-    { label: 'Dues collected', value: `₹${stats.data?.dues_collected ?? 0}` },
-  ];
-
   return (
-    <ScreenScaffold title="Dashboard">
-      <View className="gap-4 p-5">
-        <View className="flex-row flex-wrap gap-3">
-          {cards.map((c) => (
-            <Card key={c.label} className="w-[47%]">
-              <Text className="text-2xl font-bold text-primary">{c.value}</Text>
-              <Text className="text-xs text-foreground/60">{c.label}</Text>
-            </Card>
-          ))}
+    <ScreenScaffold
+      title="Admin Dashboard"
+      subtitle={`Hi, ${profile?.full_name?.split(' ')[0] ?? 'Admin'} 👋`}
+      rightIcon="notifications-outline"
+    >
+      <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
+        <View className="gap-3">
+          <SectionHeader title="Society overview" />
+          <View className="flex-row flex-wrap gap-3">
+            <StatCell icon="people" label="Residents" value={stats.data?.residents ?? 0} />
+            <StatCell
+              icon="chatbox-ellipses"
+              label="Open complaints"
+              value={stats.data?.open_complaints ?? 0}
+            />
+            <StatCell
+              icon="walk"
+              label="Visitors inside"
+              value={stats.data?.visitors_inside ?? 0}
+            />
+            <StatCell
+              icon="cash"
+              label="Dues collected"
+              value={`₹${stats.data?.dues_collected ?? 0}`}
+            />
+          </View>
         </View>
-        <Button label="Generate monthly dues" loading={busy} onPress={runDues} />
-      </View>
+
+        <View className="gap-3">
+          <SectionHeader title="Management" />
+          <ListRow
+            icon="people"
+            title="Residents"
+            subtitle="Manage residents & flats"
+            onPress={() => router.push('/(admin)/residents')}
+          />
+          <ListRow
+            icon="chatbox-ellipses"
+            title="Complaints"
+            subtitle="Triage helpdesk tickets"
+            badge={stats.data?.open_complaints || undefined}
+            onPress={() => router.push('/(admin)/complaints')}
+          />
+          <ListRow
+            icon="megaphone"
+            title="Notices"
+            subtitle="Publish & manage notices"
+            onPress={() => router.push('/(admin)/notices')}
+          />
+          <ListRow
+            icon="cash"
+            title="Generate monthly dues"
+            subtitle={busy ? 'Working…' : 'Bill every resident flat'}
+            showChevron={false}
+            onPress={runDues}
+          />
+          <ListRow
+            icon="settings"
+            title="Settings"
+            subtitle="Theme & sign out"
+            onPress={() => router.push('/(admin)/settings')}
+          />
+        </View>
+      </ScrollView>
     </ScreenScaffold>
   );
 }
