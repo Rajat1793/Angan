@@ -8,6 +8,7 @@ interface ScreenScaffoldProps {
   subtitle?: string;
   rightIcon?: keyof typeof Ionicons.glyphMap;
   onRightPress?: () => void;
+  rightBadge?: number;
   children?: React.ReactNode;
 }
 
@@ -16,6 +17,7 @@ export function ScreenScaffold({
   subtitle,
   rightIcon,
   onRightPress,
+  rightBadge,
   children,
 }: ScreenScaffoldProps) {
   return (
@@ -34,6 +36,13 @@ export function ScreenScaffold({
             className="h-10 w-10 items-center justify-center rounded-full bg-muted/10"
           >
             <Ionicons name={rightIcon} size={20} color="#3E481D" />
+            {rightBadge ? (
+              <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1">
+                <Text className="text-[10px] font-bold text-white">
+                  {rightBadge > 99 ? '99+' : rightBadge}
+                </Text>
+              </View>
+            ) : null}
           </Pressable>
         ) : null}
       </View>

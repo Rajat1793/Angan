@@ -41,7 +41,8 @@ function AuthGate() {
       return;
     }
     // Signed in with a complete profile → ensure we're in the right role group.
-    // Covers cold boot from the root index as well as post-login from (auth).
+    // Only redirect from the root index or the (auth) group so shared routes
+    // (e.g. /notifications) opened on top of a role group are left alone.
     if (profile) {
       const target =
         profile.role === 'guard'
@@ -49,7 +50,7 @@ function AuthGate() {
           : profile.role === 'admin'
             ? '(admin)'
             : '(resident)';
-      if (group !== target) router.replace(`/${target}`);
+      if (group === undefined || group === '(auth)') router.replace(`/${target}`);
     }
   }, [session, profile, hydrating, segments, router]);
 
@@ -61,6 +62,7 @@ function AuthGate() {
       <Stack.Screen name="(resident)" />
       <Stack.Screen name="(guard)" />
       <Stack.Screen name="(admin)" />
+      <Stack.Screen name="notifications" options={{ presentation: 'modal' }} />
     </Stack>
   );
 }

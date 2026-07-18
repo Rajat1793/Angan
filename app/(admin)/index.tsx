@@ -15,6 +15,7 @@ import {
 } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationsList } from '@/hooks/useNotificationsList';
 import { getDashboardStats } from '@/lib/admin';
 import { generateDues } from '@/lib/payments';
 
@@ -41,6 +42,7 @@ function StatCell({
 
 export default function AdminDashboard() {
   const { profile } = useAuth();
+  const { unread } = useNotificationsList();
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
   const [busy, setBusy] = useState(false);
@@ -69,6 +71,8 @@ export default function AdminDashboard() {
       title="Admin Dashboard"
       subtitle={`Hi, ${profile?.full_name?.split(' ')[0] ?? 'Admin'} 👋`}
       rightIcon="notifications-outline"
+      rightBadge={unread}
+      onRightPress={() => router.push('/notifications')}
     >
       <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
         <View className="gap-3">

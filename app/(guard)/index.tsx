@@ -7,6 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import { ErrorState, Loading } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationsList } from '@/hooks/useNotificationsList';
 import { useVisitors } from '@/hooks/useVisitors';
 
 // A large tappable action tile that grows to fill the grid.
@@ -46,6 +47,7 @@ function BigTile({
 
 export default function GuardDashboard() {
   const { profile } = useAuth();
+  const { unread } = useNotificationsList();
   // One query drives the overview counts and the "inside" badge.
   const { data, isLoading, isError, refetch } = useVisitors([
     'pending',
@@ -77,6 +79,8 @@ export default function GuardDashboard() {
       title="Guard Dashboard"
       subtitle={`Hi, ${profile?.full_name?.split(' ')[0] ?? 'Guard'} 👋`}
       rightIcon="notifications-outline"
+      rightBadge={unread}
+      onRightPress={() => router.push('/notifications')}
     >
       <View className="flex-1 gap-4 p-5">
         {/* Enlarged overview card. */}

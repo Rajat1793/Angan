@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import * as Notifications from 'expo-notifications';
 import { useEffect } from 'react';
 
-import { registerForPush, savePushToken } from '@/lib/notifications';
+import { registerForPush, savePushToken, setupAndroidChannel } from '@/lib/notifications';
 import { useAuthStore } from '@/store/auth.store';
 import { useNotificationsStore } from '@/store/notifications.store';
 
@@ -15,6 +15,7 @@ export function useNotifications() {
     if (!userId) return;
     // Register + persist token once we know who is signed in.
     (async () => {
+      await setupAndroidChannel();
       const token = await registerForPush();
       if (token) {
         setToken(token);

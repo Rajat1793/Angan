@@ -11,11 +11,13 @@ import {
 } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
+import { useNotificationsList } from '@/hooks/useNotificationsList';
 import { useVisitors } from '@/hooks/useVisitors';
 import { listNotices } from '@/lib/community';
 
 export default function ResidentHome() {
   const { profile } = useAuth();
+  const { unread } = useNotificationsList();
   const pending = useVisitors(['pending']);
   const notices = useQuery({ queryKey: ['notices'], queryFn: listNotices });
   const pendingCount = pending.data?.length ?? 0;
@@ -26,6 +28,8 @@ export default function ResidentHome() {
       title="Home"
       subtitle={`Hi, ${firstName} 👋`}
       rightIcon="notifications-outline"
+      rightBadge={unread}
+      onRightPress={() => router.push('/notifications')}
     >
       <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
         {/* Greeting hero banner. */}
