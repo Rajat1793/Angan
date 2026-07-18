@@ -4,7 +4,7 @@ import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
 import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
@@ -28,7 +28,7 @@ const SEGMENTS: { key: string; label: string; match: (s: VisitorStatus) => boole
 ];
 
 export default function GuardVisitors() {
-  const { data, isLoading, isError, refetch } = useVisitors(ALL_STATUSES);
+  const { data, isLoading, isError, refetch, isRefetching } = useVisitors(ALL_STATUSES);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
   const sheetRef = useRef<BottomSheetModal>(null);
@@ -73,7 +73,7 @@ export default function GuardVisitors() {
   };
 
   return (
-    <ScreenScaffold title="Visitors">
+    <ScreenScaffold title="Visitors" rightIcon="refresh" onRightPress={() => refetch()}>
       <View className="flex-1">
         {/* Nested status filter tabs. */}
         <View className="border-b border-muted/10">
@@ -124,6 +124,9 @@ export default function GuardVisitors() {
               data={filtered}
               keyExtractor={(v) => v.id}
               contentContainerStyle={{ padding: 16 }}
+              refreshControl={
+                <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#3E481D" />
+              }
               ItemSeparatorComponent={() => <Text className="h-3" />}
               renderItem={({ item }) => (
                 <VisitorCard visitor={item} onPress={() => openDetail(item)}>
