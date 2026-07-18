@@ -1,8 +1,9 @@
 // Guard visitors-inside tab: realtime list with a Mark Exit action.
-import type BottomSheet from '@gorhom/bottom-sheet';
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
 import { Text } from 'react-native';
 
 import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
@@ -17,13 +18,16 @@ export default function GuardVisitors() {
   const { data, isLoading, isError, refetch } = useVisitors(['inside']);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
-  const sheetRef = useRef<BottomSheet>(null);
+  const sheetRef = useRef<BottomSheetModal>(null);
   const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Close the detail sheet whenever this tab loses focus.
+  useFocusEffect(useCallback(() => () => sheetRef.current?.dismiss(), []));
 
   // Open the detail sheet for a tapped visitor.
   const openDetail = (visitor: Visitor) => {
     setSelected(visitor);
-    sheetRef.current?.expand();
+    sheetRef.current?.present();
   };
 
   // Mark exit stamps exit time and moves the visitor to history.

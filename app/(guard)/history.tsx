@@ -1,7 +1,8 @@
 // Guard history tab: exited/denied visitors with a name/phone search filter.
-import type BottomSheet from '@gorhom/bottom-sheet';
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
-import { useMemo, useRef, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { Empty, ErrorState, Input, Loading } from '@/components/ui';
@@ -14,13 +15,16 @@ import type { Visitor } from '@/lib/database.types';
 export default function GuardHistory() {
   const { data, isLoading, isError, refetch } = useVisitors(['exited', 'denied']);
   const [query, setQuery] = useState('');
-  const sheetRef = useRef<BottomSheet>(null);
+  const sheetRef = useRef<BottomSheetModal>(null);
   const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Close the detail sheet whenever this tab loses focus.
+  useFocusEffect(useCallback(() => () => sheetRef.current?.dismiss(), []));
 
   // Open the detail sheet for a tapped visitor.
   const openDetail = (visitor: Visitor) => {
     setSelected(visitor);
-    sheetRef.current?.expand();
+    sheetRef.current?.present();
   };
 
   // Client-side filter over the fetched page by name or phone.

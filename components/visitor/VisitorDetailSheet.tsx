@@ -1,8 +1,15 @@
-// VisitorDetailSheet: bottom sheet showing a visitor's full details on tap.
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+// VisitorDetailSheet: bottom-sheet modal showing a visitor's full details on tap.
+// Rendered in a portal (above the tab bar), dims + closes on outside tap, and
+// its content scrolls when it overflows.
+import {
+  BottomSheetBackdrop,
+  type BottomSheetBackdropProps,
+  BottomSheetModal,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
-import { forwardRef } from 'react';
-import { Text, View } from 'react-native';
+import { forwardRef, useCallback } from 'react';
+import { Image, Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui';
 import type { Visitor, VisitorStatus } from '@/lib/database.types';
@@ -29,28 +36,57 @@ function Row({ icon, label, value }: { icon: keyof typeof Ionicons.glyphMap; lab
 // Format a nullable timestamp for display.
 const fmt = (t: string | null) => (t ? new Date(t).toLocaleString() : '—');
 
-export const VisitorDetailSheet = forwardRef<BottomSheet, { visitor: Visitor | null }>(
-  ({ visitor }, ref) => (
-    <BottomSheet ref={ref} index={-1} enablePanDownToClose backgroundStyle={{ backgroundColor: '#FCFDF3' }}>
-      <BottomSheetView className="gap-1 p-5">
-        {visitor ? (
-          <>
-            <View className="mb-2 flex-row items-center justify-between">
-              <Text className="text-xl font-bold text-foreground">{visitor.name}</Text>
-              <Badge label={visitor.status} tone={statusTone[visitor.status]} />
-            </View>
-            <Row icon="pricetag" label="Type" value={visitor.type} />
-            <Row icon="document-text" label="Purpose" value={visitor.purpose ?? '—'} />
-            <Row icon="call" label="Phone" value={visitor.phone ?? '—'} />
-            <Row icon="car-sport" label="Vehicle" value={visitor.vehicle ?? '—'} />
-            <Row icon="log-in" label="Entry" value={fmt(visitor.entry_at)} />
-            <Row icon="log-out" label="Exit" value={fmt(visitor.exit_at)} />
-            <Row icon="time" label="Created" value={fmt(visitor.created_at)} />
-            {visitor.otp ? <Row icon="key" label="OTP" value={visitor.otp} /> : null}
-          </>
-        ) : null}
-      </BottomSheetView>
-    </BottomSheet>
-  ),
+export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visitor | null }>(
+  ({ visitor }, ref) => {
+    // Dimmed backdrop; tapping it closes the sheet.
+    const renderBackdrop = useCallback(
+      (props: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          pressBehavior="close"
+        />
+      ),
+      [],
+    );
+
+    return (
+      <BottomSheetModal
+        ref={ref}
+        enablePanDownToClose
+        enableDynamicSizing
+        backdropComponent={renderBackdrop}
+        backgroundStyle={{ backgroundColor: '#FCFDF3' }}
+        handleIndicatorStyle={{ backgroundColor: '#3E481D' }}
+      >
+        <BottomSheetScrollView contentContainerClassName="gap-1 p-5 pb-10">
+          {visitor ? (
+            <>
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="text-xl font-bold text-foreground">{visitor.name}</Text>
+                <Badge label={visitor.status} tone={statusTone[visitor.status]} />
+              </View>
+              {visitor.photo_url ? (
+                <Image
+                  source={{ uri: visitor.photo_url }}
+                  className="mb-3 h-52 w-full rounded-2xl bg-muted/10"
+                  resizeMode="cover"
+                />
+              ) : null}
+              <Row icon="pricetag" label="Type" value={visitor.type} />
+              <Row icon="document-text" label="Purpose" value={visitor.purpose ?? '—'} />
+              <Row icon="call" label="Phone" value={visitor.phone ?? '—'} />
+              <Row icon="car-sport" label="Vehicle" value={visitor.vehicle ?? '—'} />
+              <Row icon="log-in" label="Entry" value={fmt(visitor.entry_at)} />
+              <Row icon="log-out" label="Exit" value={fmt(visitor.exit_at)} />
+              <Row icon="time" label="Created" value={fmt(visitor.created_at)} />
+              {visitor.otp ? <Row icon="key" label="OTP" value={visitor.otp} /> : null}
+            </>
+          ) : null}
+        </BottomSheetScrollView>
+      </BottomSheetModal>
+    );
+  },
 );
 VisitorDetailSheet.displayName = 'VisitorDetailSheet';

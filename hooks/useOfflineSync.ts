@@ -34,7 +34,6 @@ export function useOfflineSync() {
             {
               ...item.input,
               society_id: item.societyId,
-              flat_id: item.flatId,
             },
             item.createdBy,
           );

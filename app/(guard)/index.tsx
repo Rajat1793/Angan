@@ -1,8 +1,8 @@
 // Guard dashboard: overview stats, quick actions, and a recent visitor queue.
-import type BottomSheet from '@gorhom/bottom-sheet';
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
-import { useMemo, useRef, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import {
@@ -34,8 +34,11 @@ export default function GuardDashboard() {
   ]);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
-  const sheetRef = useRef<BottomSheet>(null);
+  const sheetRef = useRef<BottomSheetModal>(null);
   const [selected, setSelected] = useState<Visitor | null>(null);
+
+  // Close the detail sheet whenever this tab loses focus.
+  useFocusEffect(useCallback(() => () => sheetRef.current?.dismiss(), []));
 
   // Derive headline counts and the pending/approved queue from one dataset.
   const { visitors, entered, exited, queue } = useMemo(() => {
@@ -50,7 +53,7 @@ export default function GuardDashboard() {
 
   const openDetail = (visitor: Visitor) => {
     setSelected(visitor);
-    sheetRef.current?.expand();
+    sheetRef.current?.present();
   };
 
   // Only approved visitors can be marked as entered.

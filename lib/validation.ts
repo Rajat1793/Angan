@@ -19,7 +19,10 @@ export const onboardingSchema = z.object({
 // Visitor registration captured by guards at the gate.
 export const visitorSchema = z.object({
   name: z.string().min(2, 'Enter visitor name'),
-  phone: z.string().min(10, 'Enter a valid phone'),
+  phone: z
+    .string()
+    .regex(/^\d{10}$/, 'Enter a valid 10-digit phone number'),
+  flat_id: z.string().min(1, 'Select the flat the guest is visiting'),
   type: z.enum(['delivery', 'cab', 'guest', 'service']),
   purpose: z.string().min(2, 'Enter purpose'),
   vehicle: z.string().optional(),

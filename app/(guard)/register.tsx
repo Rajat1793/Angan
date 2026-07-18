@@ -5,10 +5,11 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Button, Input, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
+import { FlatPicker } from '@/components/visitor/FlatPicker';
 import { uploadVisitorPhoto } from '@/lib/storage';
 import { createVisitor } from '@/lib/visitors';
 import { visitorSchema, type VisitorInput } from '@/lib/validation';
@@ -30,7 +31,7 @@ export default function Register() {
 
   const { control, handleSubmit, watch, setValue, formState } = useForm<VisitorInput>({
     resolver: zodResolver(visitorSchema),
-    defaultValues: { name: '', phone: '', type: 'delivery', purpose: '', vehicle: '' },
+    defaultValues: { name: '', phone: '', flat_id: '', type: 'delivery', purpose: '', vehicle: '' },
   });
   const type = watch('type');
 
@@ -49,7 +50,7 @@ export default function Register() {
       let photoUrl: string | null = null;
       if (photoUri) photoUrl = await uploadVisitorPhoto(photoUri, profile.society_id);
       await createVisitor(
-        { ...values, society_id: profile.society_id, flat_id: profile.flat_id, photo_url: photoUrl },
+        { ...values, society_id: profile.society_id, photo_url: photoUrl },
         profile.id,
       );
       queryClient.invalidateQueries({ queryKey: ['visitors'] });
@@ -61,7 +62,7 @@ export default function Register() {
         localId: `${Date.now()}`,
         input: values,
         societyId: profile.society_id,
-        flatId: profile.flat_id,
+        flatId: values.flat_id,
         createdBy: profile.id,
         createdAt: Date.now(),
       });
@@ -101,7 +102,28 @@ export default function Register() {
           control={control}
           name="phone"
           render={({ field: { onChange, value } }) => (
-            <Input label="Phone" keyboardType="phone-pad" value={value} onChangeText={onChange} error={formState.errors.phone?.message} />
+            <Input
+              label="Phone"
+              keyboardType="phone-pad"
+              maxLength={10}
+              value={value}
+              onChangeText={(t) => onChange(t.replace(/[^0-9]/g, ''))}
+              error={formState.errors.phone?.message}
+            />
+          )}
+        />
+
+        {/* Mandatory flat destination with searchable picker. */}
+        <Controller
+          control={control}
+          name="flat_id"
+          render={({ field: { onChange, value } }) => (
+            <FlatPicker
+              societyId={profile?.society_id}
+              value={value}
+              onChange={onChange}
+              error={formState.errors.flat_id?.message}
+            />
           )}
         />
 
@@ -149,6 +171,15 @@ export default function Register() {
             setCameraOpen(true);
           }}
         />
+
+        {/* Preview of the captured photo. */}
+        {photoUri ? (
+          <Image
+            source={{ uri: photoUri }}
+            className="h-52 w-full rounded-2xl bg-muted/10"
+            resizeMode="cover"
+          />
+        ) : null}
 
         <Button label="Register" loading={saving} onPress={handleSubmit(onSubmit)} />
       </ScrollView>
