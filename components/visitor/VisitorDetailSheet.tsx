@@ -8,10 +8,11 @@ import {
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
-import { forwardRef, useCallback } from 'react';
+import { forwardRef, useCallback, useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui';
+import { useFlats } from '@/hooks/useFlats';
 import type { Visitor, VisitorStatus } from '@/lib/database.types';
 
 const statusTone: Record<VisitorStatus, 'neutral' | 'success' | 'warning' | 'danger' | 'info'> = {
@@ -38,6 +39,13 @@ const fmt = (t: string | null) => (t ? new Date(t).toLocaleString() : '—');
 
 export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visitor | null }>(
   ({ visitor }, ref) => {
+    // Resolve the visited flat's block/number label (e.g. A-101).
+    const { data: flats } = useFlats(visitor?.society_id);
+    const flatLabel = useMemo(
+      () => flats?.find((f) => f.id === visitor?.flat_id)?.number ?? '—',
+      [flats, visitor?.flat_id],
+    );
+
     // Dimmed backdrop; tapping it closes the sheet.
     const renderBackdrop = useCallback(
       (props: BottomSheetBackdropProps) => (
@@ -75,6 +83,7 @@ export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visito
                 />
               ) : null}
               <Row icon="pricetag" label="Type" value={visitor.type} />
+              <Row icon="home" label="Flat" value={flatLabel} />
               <Row icon="document-text" label="Purpose" value={visitor.purpose ?? '—'} />
               <Row icon="call" label="Phone" value={visitor.phone ?? '—'} />
               <Row icon="car-sport" label="Vehicle" value={visitor.vehicle ?? '—'} />
