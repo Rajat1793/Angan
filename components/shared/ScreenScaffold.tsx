@@ -1,11 +1,13 @@
 // ScreenScaffold: consistent safe-area page wrapper with a title header.
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ScreenScaffoldProps {
   title: string;
   subtitle?: string;
+  showBack?: boolean;
   rightIcon?: keyof typeof Ionicons.glyphMap;
   onRightPress?: () => void;
   rightBadge?: number;
@@ -15,6 +17,7 @@ interface ScreenScaffoldProps {
 export function ScreenScaffold({
   title,
   subtitle,
+  showBack,
   rightIcon,
   onRightPress,
   rightBadge,
@@ -22,8 +25,17 @@ export function ScreenScaffold({
 }: ScreenScaffoldProps) {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
-      <View className="flex-row items-center justify-between border-b border-muted/10 px-5 pb-3 pt-2">
-        <View>
+      <View className="flex-row items-center gap-3 border-b border-muted/10 px-5 pb-3 pt-2">
+        {showBack ? (
+          <Pressable
+            onPress={() => router.back()}
+            hitSlop={8}
+            className="h-10 w-10 items-center justify-center rounded-full bg-muted/10"
+          >
+            <Ionicons name="chevron-back" size={20} color="#3E481D" />
+          </Pressable>
+        ) : null}
+        <View className="flex-1">
           <Text className="text-2xl font-bold text-foreground">{title}</Text>
           {subtitle ? (
             <Text className="text-sm text-foreground/50">{subtitle}</Text>

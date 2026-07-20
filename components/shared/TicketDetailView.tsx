@@ -70,7 +70,7 @@ export function TicketDetailView({ id, canManage }: { id: string; canManage: boo
   const next = t ? nextStatus[t.status] : null;
 
   return (
-    <ScreenScaffold title="Ticket">
+    <ScreenScaffold title="Ticket" showBack>
       <FlatList
         data={comments.data ?? []}
         keyExtractor={(c) => c.id}

@@ -16,7 +16,7 @@ export default function NoticeDetail() {
 
   const n = notice.data;
   return (
-    <ScreenScaffold title="Notice">
+    <ScreenScaffold title="Notice" showBack>
       <ScrollView contentContainerClassName="gap-3 p-5">
         <View className="flex-row items-center gap-2">
           {n?.pinned ? <Badge label="Pinned" tone="info" /> : null}

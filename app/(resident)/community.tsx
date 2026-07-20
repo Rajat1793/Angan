@@ -154,13 +154,6 @@ export default function Community() {
           )}
         </View>
 
-        {/* Helpdesk shortcut. */}
-        <Button
-          label="Raise a helpdesk ticket"
-          variant="outline"
-          onPress={() => router.push('/(resident)/helpdesk')}
-        />
-
         {/* Notices — tap to open. */}
         <View className="gap-3">
           <Text className="text-lg font-bold text-foreground">Notices</Text>

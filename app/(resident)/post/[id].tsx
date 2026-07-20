@@ -61,7 +61,7 @@ export default function PostDetail() {
 
   const p = post.data;
   return (
-    <ScreenScaffold title="Post">
+    <ScreenScaffold title="Post" showBack>
       <FlatList
         data={comments.data ?? []}
         keyExtractor={(c) => c.id}

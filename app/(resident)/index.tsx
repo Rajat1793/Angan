@@ -1,7 +1,7 @@
 // Resident home: greeting hero, quick-action tiles, and a notices preview.
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import {
   Card,
@@ -74,19 +74,21 @@ export default function ResidentHome() {
             onAction={() => router.push('/(resident)/community')}
           />
           {(notices.data ?? []).slice(0, 3).map((n) => (
-            <Card key={n.id} className="flex-row items-start gap-3">
-              <View className="h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                <Text className="text-base">📢</Text>
-              </View>
-              <View className="flex-1">
-                <Text className="text-sm font-semibold text-foreground">{n.title}</Text>
-                {n.body ? (
-                  <Text className="text-xs text-foreground/60" numberOfLines={2}>
-                    {n.body}
-                  </Text>
-                ) : null}
-              </View>
-            </Card>
+            <Pressable key={n.id} onPress={() => router.push(`/(resident)/notice/${n.id}`)}>
+              <Card className="flex-row items-start gap-3">
+                <View className="h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                  <Text className="text-base">📢</Text>
+                </View>
+                <View className="flex-1">
+                  <Text className="text-sm font-semibold text-foreground">{n.title}</Text>
+                  {n.body ? (
+                    <Text className="text-xs text-foreground/60" numberOfLines={2}>
+                      {n.body}
+                    </Text>
+                  ) : null}
+                </View>
+              </Card>
+            </Pressable>
           ))}
         </View>
 
