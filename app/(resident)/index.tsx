@@ -71,7 +71,7 @@ export default function ResidentHome() {
           <SectionHeader
             title="Society notices"
             actionLabel="View all"
-            onAction={() => router.push('/(resident)/community')}
+            onAction={() => router.push('/(resident)/notices')}
           />
           {(notices.data ?? []).slice(0, 3).map((n) => (
             <Pressable key={n.id} onPress={() => router.push(`/(resident)/notice/${n.id}`)}>
@@ -93,7 +93,13 @@ export default function ResidentHome() {
         </View>
 
         <View className="gap-3">
-          <SectionHeader title="Support" />
+          <SectionHeader title="More" />
+          <ListRow
+            icon="podium"
+            title="Polls"
+            subtitle="Vote on society decisions"
+            onPress={() => router.push('/(resident)/polls')}
+          />
           <ListRow
             icon="chatbox-ellipses"
             title="Raise a helpdesk ticket"

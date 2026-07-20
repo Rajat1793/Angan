@@ -59,6 +59,9 @@ export default function ResidentLayout() {
       {/* Notice + post detail are opened from Community. */}
       <Tabs.Screen name="notice/[id]" options={{ href: null }} />
       <Tabs.Screen name="post/[id]" options={{ href: null }} />
+      {/* Notices list + polls opened from Home. */}
+      <Tabs.Screen name="notices" options={{ href: null }} />
+      <Tabs.Screen name="polls" options={{ href: null }} />
       {/* Amenities booking opened from Home. */}
       <Tabs.Screen name="amenities" options={{ href: null }} />
     </Tabs>
