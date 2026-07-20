@@ -5,6 +5,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
 import { supabase } from './supabase';
+import { useSettingsStore } from '@/store/settings.store';
 
 // Expo Go (SDK 53+) dropped remote push; only dev/standalone builds support it.
 export const isExpoGo = Constants.appOwnership === 'expo';
@@ -20,12 +21,12 @@ export interface AppNotification {
   created_at: string;
 }
 
-// Foreground alerts show a banner + play a sound.
+// Foreground alerts show a banner; sound follows the user's setting.
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
     shouldShowList: true,
-    shouldPlaySound: true,
+    shouldPlaySound: useSettingsStore.getState().soundEnabled,
     shouldSetBadge: true,
   }),
 });

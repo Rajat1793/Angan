@@ -46,6 +46,15 @@ export default function GuardLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings" size={size} color={color} />
+          ),
+        }}
+      />
       {/* Register + verify are opened from actions, not shown as tabs. */}
       <Tabs.Screen name="register" options={{ href: null }} />
       <Tabs.Screen name="verify" options={{ href: null }} />
