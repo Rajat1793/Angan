@@ -8,6 +8,7 @@ export interface TicketComment {
   author_id: string;
   body: string;
   created_at: string;
+  author_name?: string | null;
 }
 
 // Tickets visible to the caller (RLS scopes to own tickets or admin's society).
@@ -18,6 +19,17 @@ export async function listTickets(): Promise<Ticket[]> {
     .order('created_at', { ascending: false });
   if (error) throw error;
   return (data ?? []) as Ticket[];
+}
+
+// A single ticket for the detail view.
+export async function getTicket(id: string): Promise<Ticket | null> {
+  const { data, error } = await supabase
+    .from('helpdesk_tickets')
+    .select('*')
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return (data as Ticket) ?? null;
 }
 
 // Resident raises a ticket with an optional photo attachment.
@@ -56,15 +68,22 @@ export async function assignTicket(id: string, assigneeId: string) {
   if (error) throw error;
 }
 
-// Threaded comments for a ticket, oldest first.
+// Threaded comments for a ticket, oldest first, with author names.
 export async function listComments(ticketId: string): Promise<TicketComment[]> {
   const { data, error } = await supabase
     .from('ticket_comments')
-    .select('*')
+    .select('id, ticket_id, author_id, body, created_at, author:profiles(full_name)')
     .eq('ticket_id', ticketId)
     .order('created_at', { ascending: true });
   if (error) throw error;
-  return (data ?? []) as TicketComment[];
+  return (data ?? []).map((c: any) => ({
+    id: c.id,
+    ticket_id: c.ticket_id,
+    author_id: c.author_id,
+    body: c.body,
+    created_at: c.created_at,
+    author_name: c.author?.full_name ?? null,
+  }));
 }
 
 export async function addComment(

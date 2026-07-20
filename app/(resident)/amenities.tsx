@@ -1,11 +1,96 @@
-// Resident amenities: browse slots, book (capacity-safe), or cancel.
+// Resident amenities: pick a time slot, then book (capacity-safe) or cancel.
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ScrollView, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Button, Card, ErrorState, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
-import { bookSlot, cancelBooking, listAmenities } from '@/lib/amenities';
+import { bookSlot, cancelBooking, listAmenities, type AmenityWithSlots } from '@/lib/amenities';
 import { useAuthStore } from '@/store/auth.store';
+
+// Compact "Mon, 2:00 PM" style label for a slot.
+const slotLabel = (iso: string) =>
+  new Date(iso).toLocaleString(undefined, {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
+// One amenity with selectable time-slot chips + a book action.
+function AmenityCard({
+  amenity,
+  onBook,
+  onCancel,
+}: {
+  amenity: AmenityWithSlots;
+  onBook: (slotId: string) => void;
+  onCancel: (slotId: string) => void;
+}) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const mine = amenity.slots.find((s) => s.mine);
+
+  return (
+    <Card className="gap-3">
+      <View>
+        <Text className="text-base font-semibold text-foreground">{amenity.name}</Text>
+        {amenity.description ? (
+          <Text className="text-sm text-foreground/60">{amenity.description}</Text>
+        ) : null}
+      </View>
+
+      {mine ? (
+        <View className="flex-row items-center justify-between rounded-xl border border-primary/30 bg-primary/5 p-3">
+          <View>
+            <Text className="text-sm font-medium text-foreground">Booked</Text>
+            <Text className="text-xs text-foreground/50">{slotLabel(mine.starts_at)}</Text>
+          </View>
+          <Button label="Cancel" variant="outline" onPress={() => onCancel(mine.id)} />
+        </View>
+      ) : amenity.slots.length === 0 ? (
+        <Text className="text-sm text-foreground/50">No slots available.</Text>
+      ) : (
+        <>
+          <Text className="text-xs font-medium uppercase tracking-wide text-foreground/40">
+            Select a time slot
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            {amenity.slots.map((s) => {
+              const full = s.booked >= s.capacity;
+              const sel = selected === s.id;
+              return (
+                <Pressable
+                  key={s.id}
+                  disabled={full}
+                  onPress={() => setSelected(s.id)}
+                  className={`rounded-xl border px-3 py-2 ${
+                    sel
+                      ? 'border-primary bg-primary/10'
+                      : full
+                        ? 'border-muted/10 opacity-40'
+                        : 'border-muted/20'
+                  }`}
+                >
+                  <Text className="text-sm font-medium text-foreground">
+                    {slotLabel(s.starts_at)}
+                  </Text>
+                  <Text className="text-xs text-foreground/50">
+                    {s.booked}/{s.capacity}
+                    {full ? ' · full' : ''}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <Button
+            label="Book selected slot"
+            disabled={!selected}
+            onPress={() => selected && onBook(selected)}
+          />
+        </>
+      )}
+    </Card>
+  );
+}
 
 export default function Amenities() {
   const profile = useAuthStore((s) => s.profile);
@@ -48,41 +133,7 @@ export default function Amenities() {
     <ScreenScaffold title="Amenities">
       <ScrollView contentContainerClassName="gap-4 p-5">
         {(amenities.data ?? []).map((a) => (
-          <Card key={a.id} className="gap-3">
-            <View>
-              <Text className="text-base font-semibold text-foreground">{a.name}</Text>
-              {a.description ? (
-                <Text className="text-sm text-foreground/60">{a.description}</Text>
-              ) : null}
-            </View>
-            {a.slots.map((s) => {
-              const full = s.booked >= s.capacity;
-              return (
-                <View
-                  key={s.id}
-                  className="flex-row items-center justify-between rounded-xl border border-muted/20 p-3"
-                >
-                  <View>
-                    <Text className="text-sm text-foreground">
-                      {new Date(s.starts_at).toLocaleString()}
-                    </Text>
-                    <Text className="text-xs text-foreground/50">
-                      {s.booked}/{s.capacity} booked
-                    </Text>
-                  </View>
-                  {s.mine ? (
-                    <Button label="Cancel" variant="outline" onPress={() => cancel(s.id)} />
-                  ) : (
-                    <Button
-                      label={full ? 'Full' : 'Book'}
-                      disabled={full}
-                      onPress={() => book(s.id)}
-                    />
-                  )}
-                </View>
-              );
-            })}
-          </Card>
+          <AmenityCard key={a.id} amenity={a} onBook={book} onCancel={cancel} />
         ))}
       </ScrollView>
     </ScreenScaffold>

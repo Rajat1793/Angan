@@ -51,6 +51,8 @@ export default function AdminLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="settings" size={size} color={color} />,
         }}
       />
+      {/* Ticket detail opened from Complaints, not shown as a tab. */}
+      <Tabs.Screen name="ticket/[id]" options={{ href: null }} />
     </Tabs>
   );
 }
