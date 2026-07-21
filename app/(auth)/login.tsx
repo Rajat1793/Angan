@@ -1,4 +1,4 @@
-// Welcome + login screen: branded teal hero, email/password sign-in, an
+// Welcome + login screen: branded olive hero, email/password sign-in, an
 // email-OTP alternative, and one-tap demo logins.
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,10 +11,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input, useToast } from '@/components/ui';
 import { requestEmailOtp, signInWithPassword } from '@/lib/auth';
 import { loginSchema, type LoginInput } from '@/lib/validation';
-
-// Brand palette from the Angan logo.
-const TEAL = '#12897B';
-const TEAL_DARK = '#0E6E62';
 
 // Seeded demo accounts (all share the password below). Each resident lives in
 // a different flat so guard/resident flows can be tested across flats.
@@ -77,17 +73,12 @@ export default function Login() {
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView contentContainerClassName="gap-6 px-6 pb-10" showsVerticalScrollIndicator={false}>
         {/* Branded hero. */}
-        <View className="items-center gap-3 rounded-b-[36px] pb-6 pt-8" style={{ backgroundColor: `${TEAL}14` }}>
-          <View
-            className="h-20 w-20 items-center justify-center rounded-3xl shadow-sm"
-            style={{ backgroundColor: TEAL }}
-          >
+        <View className="items-center gap-3 rounded-b-[36px] bg-primary/10 pb-6 pt-8">
+          <View className="h-20 w-20 items-center justify-center rounded-3xl bg-primary shadow-sm">
             <Ionicons name="home" size={40} color="#FCFDF3" />
           </View>
           <View className="items-center">
-            <Text className="text-3xl font-bold" style={{ color: TEAL }}>
-              Angan
-            </Text>
+            <Text className="text-3xl font-bold text-primary">Angan</Text>
             <Text className="text-sm font-medium text-foreground/50">The Modern Courtyard</Text>
           </View>
         </View>
@@ -131,12 +122,11 @@ export default function Login() {
             )}
           />
 
-          {/* Teal primary CTA. */}
+          {/* Primary CTA. */}
           <Pressable
             onPress={handleSubmit(onSubmit)}
             disabled={loading}
-            className={`h-12 flex-row items-center justify-center rounded-xl px-4 ${loading ? 'opacity-60' : 'active:opacity-80'}`}
-            style={{ backgroundColor: TEAL_DARK }}
+            className={`h-12 flex-row items-center justify-center rounded-xl bg-primary px-4 ${loading ? 'opacity-60' : 'active:opacity-80'}`}
           >
             {loading ? (
               <ActivityIndicator color="#FCFDF3" />
@@ -147,12 +137,9 @@ export default function Login() {
 
           <Pressable
             onPress={onEmailOtp}
-            className="h-12 flex-row items-center justify-center rounded-xl border px-4 active:opacity-70"
-            style={{ borderColor: TEAL }}
+            className="h-12 flex-row items-center justify-center rounded-xl border border-primary px-4 active:opacity-70"
           >
-            <Text className="text-base font-semibold" style={{ color: TEAL }}>
-              Use email OTP instead
-            </Text>
+            <Text className="text-base font-semibold text-primary">Use email OTP instead</Text>
           </Pressable>
         </View>
 
