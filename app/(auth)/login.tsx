@@ -1,14 +1,20 @@
-// Login screen: email/password sign-in with an email-OTP alternative.
+// Welcome + login screen: branded teal hero, email/password sign-in, an
+// email-OTP alternative, and one-tap demo logins.
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Button, Input, useToast } from '@/components/ui';
+import { Input, useToast } from '@/components/ui';
 import { requestEmailOtp, signInWithPassword } from '@/lib/auth';
 import { loginSchema, type LoginInput } from '@/lib/validation';
+
+// Brand palette from the Angan logo.
+const TEAL = '#12897B';
+const TEAL_DARK = '#0E6E62';
 
 // Seeded demo accounts (all share the password below). Each resident lives in
 // a different flat so guard/resident flows can be tested across flats.
@@ -69,51 +75,89 @@ export default function Login() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      <View className="flex-1 justify-center gap-5 px-6">
-        <View className="gap-1">
-          <Text className="text-3xl font-bold text-primary">Angan</Text>
-          <Text className="text-base text-foreground/60">
-            Your society, in one place.
+      <ScrollView contentContainerClassName="gap-6 px-6 pb-10" showsVerticalScrollIndicator={false}>
+        {/* Branded hero. */}
+        <View className="items-center gap-3 rounded-b-[36px] pb-6 pt-8" style={{ backgroundColor: `${TEAL}14` }}>
+          <View
+            className="h-20 w-20 items-center justify-center rounded-3xl shadow-sm"
+            style={{ backgroundColor: TEAL }}
+          >
+            <Ionicons name="home" size={40} color="#FCFDF3" />
+          </View>
+          <View className="items-center">
+            <Text className="text-3xl font-bold" style={{ color: TEAL }}>
+              Angan
+            </Text>
+            <Text className="text-sm font-medium text-foreground/50">The Modern Courtyard</Text>
+          </View>
+        </View>
+
+        {/* Welcome copy. */}
+        <View className="gap-2">
+          <Text className="text-3xl font-bold text-foreground">Welcome Home.</Text>
+          <Text className="text-base leading-6 text-foreground/60">
+            The conversations that used to happen at the gate, now happen inside. Securely.
+            Effortlessly.
           </Text>
         </View>
 
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              label="Email"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              value={value}
-              onChangeText={onChange}
-              error={formState.errors.email?.message}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="password"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              label="Password"
-              secureTextEntry
-              value={value}
-              onChangeText={onChange}
-              error={formState.errors.password?.message}
-            />
-          )}
-        />
+        {/* Sign-in form. */}
+        <View className="gap-4">
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                value={value}
+                onChangeText={onChange}
+                error={formState.errors.email?.message}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <Input
+                label="Password"
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+                error={formState.errors.password?.message}
+              />
+            )}
+          />
 
-        <Button label="Sign in" loading={loading} onPress={handleSubmit(onSubmit)} />
-        <Pressable onPress={onEmailOtp} className="items-center py-2">
-          <Text className="text-sm font-medium text-primary">
-            Use email OTP instead
-          </Text>
-        </Pressable>
+          {/* Teal primary CTA. */}
+          <Pressable
+            onPress={handleSubmit(onSubmit)}
+            disabled={loading}
+            className={`h-12 flex-row items-center justify-center rounded-xl px-4 ${loading ? 'opacity-60' : 'active:opacity-80'}`}
+            style={{ backgroundColor: TEAL_DARK }}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FCFDF3" />
+            ) : (
+              <Text className="text-base font-semibold text-background">Login as Resident</Text>
+            )}
+          </Pressable>
+
+          <Pressable
+            onPress={onEmailOtp}
+            className="h-12 flex-row items-center justify-center rounded-xl border px-4 active:opacity-70"
+            style={{ borderColor: TEAL }}
+          >
+            <Text className="text-base font-semibold" style={{ color: TEAL }}>
+              Use email OTP instead
+            </Text>
+          </Pressable>
+        </View>
 
         {/* Quick demo logins — each resident is in a different flat. */}
-        <View className="gap-2 pt-2">
+        <View className="gap-2">
           <Text className="text-xs font-medium uppercase tracking-wide text-foreground/40">
             Demo accounts
           </Text>
@@ -134,7 +178,12 @@ export default function Login() {
             ))}
           </ScrollView>
         </View>
-      </View>
+
+        {/* Terms footer. */}
+        <Text className="text-center text-xs text-foreground/40">
+          By continuing, you agree to our Terms &amp; Conditions.
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
 }
