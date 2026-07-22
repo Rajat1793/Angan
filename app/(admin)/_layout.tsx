@@ -53,6 +53,9 @@ export default function AdminLayout() {
       />
       {/* Ticket detail opened from Complaints, not shown as a tab. */}
       <Tabs.Screen name="ticket/[id]" options={{ href: null }} />
+      {/* Events + documents management opened from the dashboard. */}
+      <Tabs.Screen name="events" options={{ href: null }} />
+      <Tabs.Screen name="documents" options={{ href: null }} />
     </Tabs>
   );
 }

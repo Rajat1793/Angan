@@ -119,6 +119,18 @@ export default function AdminDashboard() {
             onPress={() => router.push('/(admin)/notices')}
           />
           <ListRow
+            icon="calendar"
+            title="Events"
+            subtitle="Create community events"
+            onPress={() => router.push('/(admin)/events' as never)}
+          />
+          <ListRow
+            icon="document-text"
+            title="Documents"
+            subtitle="Share society files"
+            onPress={() => router.push('/(admin)/documents' as never)}
+          />
+          <ListRow
             icon="cash"
             title="Generate monthly dues"
             subtitle={busy ? 'Working…' : 'Bill every resident flat'}
