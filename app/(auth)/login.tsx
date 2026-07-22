@@ -22,11 +22,6 @@ const DEMO_ACCOUNTS = [
   { label: 'Neha · A-201', email: 'resident3@angan.app' },
   { label: 'Arjun · B-101', email: 'resident4@angan.app' },
   { label: 'Priya · B-102', email: 'resident5@angan.app' },
-  { label: 'Rohan · B-201', email: 'resident6@angan.app' },
-  { label: 'Sara · C-101', email: 'resident7@angan.app' },
-  { label: 'Kabir · C-102', email: 'resident8@angan.app' },
-  { label: 'Ananya · C-201', email: 'resident9@angan.app' },
-  { label: 'Dev · D-101', email: 'resident10@angan.app' },
 ];
 
 export default function Login() {
