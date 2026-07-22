@@ -11,5 +11,6 @@ export { OfflineBanner } from './Offline';
 export { QuickAction } from './QuickAction';
 export { SectionHeader } from './SectionHeader';
 export { Sheet } from './Sheet';
+export { Skeleton, ListSkeleton } from './Skeleton';
 export { StatStrip, type Stat } from './StatStrip';
 export { ToastHost, useToast } from './Toast';

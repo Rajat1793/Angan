@@ -2,9 +2,9 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, View } from 'react-native';
+import { RefreshControl, Text, View } from 'react-native';
 
-import { Button, Card, Empty, ErrorState, Loading, useToast } from '@/components/ui';
+import { Button, Card, Empty, ErrorState, ListSkeleton, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { listEvents, toggleRsvp } from '@/lib/society';
 import { useAuthStore } from '@/store/auth.store';
@@ -30,7 +30,12 @@ export default function Events() {
     }
   };
 
-  if (events.isLoading) return <Loading />;
+  if (events.isLoading)
+    return (
+      <ScreenScaffold title="Events" showBack>
+        <ListSkeleton />
+      </ScreenScaffold>
+    );
   if (events.isError) return <ErrorState onRetry={events.refetch} />;
 
   return (
@@ -42,6 +47,9 @@ export default function Events() {
           data={events.data ?? []}
           keyExtractor={(e) => e.id}
           contentContainerStyle={{ padding: 16 }}
+          refreshControl={
+            <RefreshControl refreshing={events.isRefetching} onRefresh={events.refetch} tintColor="#3E481D" />
+          }
           ItemSeparatorComponent={() => <View className="h-3" />}
           renderItem={({ item }) => (
             <Card className="gap-2">

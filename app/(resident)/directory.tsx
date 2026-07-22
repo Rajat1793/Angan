@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
 import { Linking, Pressable, Text, View } from 'react-native';
 
-import { Badge, Card, Empty, ErrorState, Input, Loading } from '@/components/ui';
+import { Badge, Card, Empty, ErrorState, Input, ListSkeleton } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { listDirectory } from '@/lib/society';
 
@@ -24,7 +24,12 @@ export default function Directory() {
     );
   }, [dir.data, query]);
 
-  if (dir.isLoading) return <Loading />;
+  if (dir.isLoading)
+    return (
+      <ScreenScaffold title="Directory" showBack>
+        <ListSkeleton />
+      </ScreenScaffold>
+    );
   if (dir.isError) return <ErrorState onRetry={dir.refetch} />;
 
   return (

@@ -3,9 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
-import { Button, Card, ErrorState, Input, Loading, useToast } from '@/components/ui';
+import { Button, Card, ErrorState, Input, ListSkeleton, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useRealtime } from '@/hooks/useRealtime';
 import { createPost, listPosts, togglePostLike, type Post } from '@/lib/community';
@@ -67,12 +67,22 @@ export default function Community() {
     }
   };
 
-  if (posts.isLoading) return <Loading />;
+  if (posts.isLoading)
+    return (
+      <ScreenScaffold title="Community">
+        <ListSkeleton />
+      </ScreenScaffold>
+    );
   if (posts.isError) return <ErrorState onRetry={posts.refetch} />;
 
   return (
     <ScreenScaffold title="Community">
-      <ScrollView contentContainerClassName="gap-6 p-5">
+      <ScrollView
+        contentContainerClassName="gap-4 p-5"
+        refreshControl={
+          <RefreshControl refreshing={posts.isRefetching} onRefresh={posts.refetch} tintColor="#3E481D" />
+        }
+      >
         {/* Post composer. */}
         <Card className="gap-2">
           <Text className="text-base font-semibold text-foreground">Share with your community</Text>
