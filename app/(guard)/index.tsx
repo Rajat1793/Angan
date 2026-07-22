@@ -134,6 +134,20 @@ export default function GuardDashboard() {
               onPress={() => router.push('/(guard)/history')}
             />
           </View>
+          <View className="flex-1 flex-row gap-4">
+            <BigTile
+              icon="clipboard"
+              title="Attendance"
+              subtitle="Mark daily help"
+              onPress={() => router.push('/(guard)/attendance' as never)}
+            />
+            <BigTile
+              icon="cube"
+              title="Deliveries"
+              subtitle="Parcels at the gate"
+              onPress={() => router.push('/(guard)/deliveries' as never)}
+            />
+          </View>
         </View>
       </View>
     </ScreenScaffold>

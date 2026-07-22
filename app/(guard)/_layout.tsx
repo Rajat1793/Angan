@@ -58,6 +58,9 @@ export default function GuardLayout() {
       {/* Register + verify are opened from actions, not shown as tabs. */}
       <Tabs.Screen name="register" options={{ href: null }} />
       <Tabs.Screen name="verify" options={{ href: null }} />
+      {/* Attendance + deliveries opened from the Gate dashboard. */}
+      <Tabs.Screen name="attendance" options={{ href: null }} />
+      <Tabs.Screen name="deliveries" options={{ href: null }} />
     </Tabs>
   );
 }
