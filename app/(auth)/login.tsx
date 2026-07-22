@@ -1,15 +1,14 @@
-// Welcome + login screen: branded olive hero, email/password sign-in, an
-// email-OTP alternative, and one-tap demo logins.
+// Welcome + login screen: branded olive hero, email/password sign-in, and
+// one-tap demo logins.
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Input, useToast } from '@/components/ui';
-import { requestEmailOtp, signInWithPassword } from '@/lib/auth';
+import { signInWithPassword } from '@/lib/auth';
 import { loginSchema, type LoginInput } from '@/lib/validation';
 
 // Seeded demo accounts (all share the password below). Each resident lives in
@@ -33,7 +32,7 @@ const DEMO_ACCOUNTS = [
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const toast = useToast((s) => s.show);
-  const { control, handleSubmit, getValues, setValue, formState } = useForm<LoginInput>({
+  const { control, handleSubmit, setValue, formState } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
@@ -55,18 +54,6 @@ export default function Login() {
     setValue('email', email);
     setValue('password', DEMO_PASSWORD);
     await onSubmit({ email, password: DEMO_PASSWORD });
-  };
-
-  // Request an email OTP and jump to the code-entry screen.
-  const onEmailOtp = async () => {
-    const email = getValues('email');
-    if (!email) return toast('Enter your email first', 'info');
-    try {
-      await requestEmailOtp(email);
-      router.push({ pathname: '/(auth)/otp', params: { email } });
-    } catch (e) {
-      toast((e as Error).message ?? 'Could not send code', 'error');
-    }
   };
 
   return (
@@ -133,13 +120,6 @@ export default function Login() {
             ) : (
               <Text className="text-base font-semibold text-background">Login as Resident</Text>
             )}
-          </Pressable>
-
-          <Pressable
-            onPress={onEmailOtp}
-            className="h-12 flex-row items-center justify-center rounded-xl border border-primary px-4 active:opacity-70"
-          >
-            <Text className="text-base font-semibold text-primary">Use email OTP instead</Text>
           </Pressable>
         </View>
 
