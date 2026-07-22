@@ -21,14 +21,17 @@ export interface AppNotification {
   created_at: string;
 }
 
-// Foreground alerts show a banner; sound follows the user's setting.
+// Foreground alerts respect the user's notification + sound settings.
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: useSettingsStore.getState().soundEnabled,
-    shouldSetBadge: true,
-  }),
+  handleNotification: async () => {
+    const { notificationsEnabled, soundEnabled } = useSettingsStore.getState();
+    return {
+      shouldShowBanner: notificationsEnabled,
+      shouldShowList: notificationsEnabled,
+      shouldPlaySound: notificationsEnabled && soundEnabled,
+      shouldSetBadge: true,
+    };
+  },
 });
 
 // Android needs a high-importance channel for heads-up alerts with sound.

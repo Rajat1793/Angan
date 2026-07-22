@@ -48,8 +48,10 @@ export function SettingsPanel() {
   const { profile, signOut } = useAuth();
   const soundEnabled = useSettingsStore((s) => s.soundEnabled);
   const hapticsEnabled = useSettingsStore((s) => s.hapticsEnabled);
+  const notificationsEnabled = useSettingsStore((s) => s.notificationsEnabled);
   const setSound = useSettingsStore((s) => s.setSound);
   const setHaptics = useSettingsStore((s) => s.setHaptics);
+  const setNotifications = useSettingsStore((s) => s.setNotifications);
   const scheme = useThemeStore((s) => s.scheme);
   const setScheme = useThemeStore((s) => s.setScheme);
   const toast = useToast((s) => s.show);
@@ -71,6 +73,13 @@ export function SettingsPanel() {
   return (
     <View className="gap-5 p-5">
       <View className="gap-3">
+        <ToggleRow
+          icon="notifications"
+          label="Push notifications"
+          hint="Show alerts for society activity"
+          value={notificationsEnabled}
+          onValueChange={setNotifications}
+        />
         <ToggleRow
           icon="volume-high"
           label="Notification sound"

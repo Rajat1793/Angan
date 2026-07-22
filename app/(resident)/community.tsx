@@ -9,6 +9,7 @@ import { Button, Card, ErrorState, Input, ListSkeleton, useToast } from '@/compo
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useRealtime } from '@/hooks/useRealtime';
 import { createPost, listPosts, togglePostLike, type Post } from '@/lib/community';
+import { hapticSuccess } from '@/lib/haptics';
 import { useAuthStore } from '@/store/auth.store';
 
 const timeLabel = (iso: string) =>
@@ -48,6 +49,7 @@ export default function Community() {
       await createPost(profile.society_id, profile.id, postBody.trim());
       setPostBody('');
       invalidatePosts();
+      hapticSuccess();
       toast('Posted', 'success');
     } catch (e) {
       toast((e as Error).message ?? 'Could not post', 'error');

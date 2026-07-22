@@ -8,6 +8,7 @@ import {
   ListRow,
   QuickAction,
   SectionHeader,
+  StatStrip,
 } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
@@ -39,6 +40,16 @@ export default function ResidentHome() {
             Welcome back to your community.
           </Text>
         </View>
+
+        {/* Today summary. */}
+        <StatStrip
+          title="Today"
+          stats={[
+            { label: 'Approvals', value: pendingCount },
+            { label: 'Notices', value: notices.data?.length ?? 0 },
+            { label: 'Alerts', value: unread },
+          ]}
+        />
 
         <View className="gap-3">
           <SectionHeader title="Quick actions" />
