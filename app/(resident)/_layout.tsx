@@ -62,6 +62,12 @@ export default function ResidentLayout() {
       {/* Notices list + polls opened from Home. */}
       <Tabs.Screen name="notices" options={{ href: null }} />
       <Tabs.Screen name="polls" options={{ href: null }} />
+      {/* Services hub + its screens, opened from Home. */}
+      <Tabs.Screen name="services" options={{ href: null }} />
+      <Tabs.Screen name="sos" options={{ href: null }} />
+      <Tabs.Screen name="frequent" options={{ href: null }} />
+      <Tabs.Screen name="vehicles" options={{ href: null }} />
+      <Tabs.Screen name="deliveries" options={{ href: null }} />
       {/* Amenities booking opened from Home. */}
       <Tabs.Screen name="amenities" options={{ href: null }} />
     </Tabs>

@@ -95,6 +95,12 @@ export default function ResidentHome() {
         <View className="gap-3">
           <SectionHeader title="More" />
           <ListRow
+            icon="apps"
+            title="Services"
+            subtitle="SOS, deliveries, vehicles & more"
+            onPress={() => router.push('/(resident)/services' as never)}
+          />
+          <ListRow
             icon="podium"
             title="Polls"
             subtitle="Vote on society decisions"
