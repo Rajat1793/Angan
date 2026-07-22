@@ -71,6 +71,8 @@ export default function ResidentLayout() {
       <Tabs.Screen name="directory" options={{ href: null }} />
       <Tabs.Screen name="documents" options={{ href: null }} />
       <Tabs.Screen name="events" options={{ href: null }} />
+      <Tabs.Screen name="marketplace" options={{ href: null }} />
+      <Tabs.Screen name="move" options={{ href: null }} />
       {/* Amenities booking opened from Home. */}
       <Tabs.Screen name="amenities" options={{ href: null }} />
     </Tabs>

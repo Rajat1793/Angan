@@ -21,6 +21,8 @@ const SERVICES: Service[] = [
   { icon: 'book', title: 'Directory', subtitle: 'Neighbours & committee', path: '/(resident)/directory' },
   { icon: 'document-text', title: 'Documents', subtitle: 'Society files & receipts', path: '/(resident)/documents' },
   { icon: 'calendar', title: 'Events', subtitle: 'Upcoming community events', path: '/(resident)/events' },
+  { icon: 'pricetags', title: 'Marketplace', subtitle: 'Buy, sell & recommend', path: '/(resident)/marketplace' },
+  { icon: 'swap-horizontal', title: 'Move in / out', subtitle: 'Request a move', path: '/(resident)/move' },
 ];
 
 export default function Services() {

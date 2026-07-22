@@ -56,6 +56,7 @@ export default function AdminLayout() {
       {/* Events + documents management opened from the dashboard. */}
       <Tabs.Screen name="events" options={{ href: null }} />
       <Tabs.Screen name="documents" options={{ href: null }} />
+      <Tabs.Screen name="moves" options={{ href: null }} />
     </Tabs>
   );
 }

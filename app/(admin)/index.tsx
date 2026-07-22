@@ -131,6 +131,12 @@ export default function AdminDashboard() {
             onPress={() => router.push('/(admin)/documents' as never)}
           />
           <ListRow
+            icon="swap-horizontal"
+            title="Move requests"
+            subtitle="Approve move in / out"
+            onPress={() => router.push('/(admin)/moves' as never)}
+          />
+          <ListRow
             icon="cash"
             title="Generate monthly dues"
             subtitle={busy ? 'Working…' : 'Bill every resident flat'}
