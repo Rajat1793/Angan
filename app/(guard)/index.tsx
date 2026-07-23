@@ -30,7 +30,7 @@ function BigTile({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-1 items-center justify-center gap-4 rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:opacity-70"
+      className="flex-1 items-center justify-center gap-4 rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:scale-[0.97] active:opacity-70"
     >
       <View
         className="h-20 w-20 items-center justify-center rounded-3xl"

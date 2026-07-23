@@ -26,7 +26,7 @@ export function ListRow({
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center gap-3 rounded-2xl border border-muted/10 bg-background p-3 active:opacity-70"
+      className="flex-row items-center gap-3 rounded-2xl border border-muted/10 bg-background p-3 active:scale-[0.98] active:opacity-70"
     >
       {/* Circular tinted icon badge. */}
       <View

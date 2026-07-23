@@ -32,7 +32,7 @@ export function VisitorCard({
   children?: React.ReactNode;
 }) {
   return (
-    <Pressable onPress={onPress} disabled={!onPress} className={onPress ? 'active:opacity-70' : ''}>
+    <Pressable onPress={onPress} disabled={!onPress} className={onPress ? 'active:scale-[0.98] active:opacity-70' : ''}>
       <Card className="gap-3">
         <View className="flex-row items-center gap-3">
           {/* Leading avatar tinted by the primary brand colour. */}

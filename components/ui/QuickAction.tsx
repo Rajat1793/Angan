@@ -16,7 +16,7 @@ export function QuickAction({ icon, label, badge, color = '#3E481D', onPress }: 
   return (
     <Pressable
       onPress={onPress}
-      className="flex-1 items-center gap-2 rounded-2xl border border-muted/10 bg-background p-3 active:opacity-70"
+      className="flex-1 items-center gap-2 rounded-2xl border border-muted/10 bg-background p-3 active:scale-95 active:opacity-70"
     >
       <View
         className="h-12 w-12 items-center justify-center rounded-full"

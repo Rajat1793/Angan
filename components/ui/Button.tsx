@@ -35,7 +35,7 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
-      className={`h-12 flex-row items-center justify-center rounded-xl px-4 ${container[variant]} ${isDisabled ? 'opacity-50' : 'active:opacity-80'}`}
+      className={`h-12 flex-row items-center justify-center rounded-xl px-4 ${container[variant]} ${isDisabled ? 'opacity-50' : 'active:scale-[0.98] active:opacity-80'}`}
     >
       {loading ? (
         <ActivityIndicator color="#FCFDF3" />
