@@ -15,3 +15,4 @@ export { Sheet } from './Sheet';
 export { Skeleton, ListSkeleton } from './Skeleton';
 export { StatStrip, type Stat } from './StatStrip';
 export { ToastHost, useToast } from './Toast';
+export { Typo, type TypoVariant } from './Typo';
