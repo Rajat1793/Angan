@@ -6,13 +6,15 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
-import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
+import { Button, Empty, ErrorState, FAB, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
 import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
 import { useVisitors } from '@/hooks/useVisitors';
 import type { Visitor, VisitorStatus } from '@/lib/database.types';
 import { markEntry, markExit } from '@/lib/visitors';
+import { router } from 'expo-router';
+import { ACCENTS } from '@/lib/accents';
 
 // Every status the guard can browse; drives the single underlying query.
 const ALL_STATUSES: VisitorStatus[] = ['pending', 'approved', 'inside', 'exited', 'denied'];
@@ -123,7 +125,7 @@ export default function GuardVisitors() {
             <FlashList
               data={filtered}
               keyExtractor={(v) => v.id}
-              contentContainerStyle={{ padding: 16 }}
+              contentContainerStyle={{ padding: 16, paddingBottom: 96 }}
               refreshControl={
                 <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#3E481D" />
               }
@@ -143,6 +145,13 @@ export default function GuardVisitors() {
           )}
         </View>
       </View>
+
+      <FAB
+        icon="person-add"
+        label="Register"
+        color={ACCENTS.blue}
+        onPress={() => router.push('/(guard)/register')}
+      />
 
       <VisitorDetailSheet ref={sheetRef} visitor={selected} />
     </ScreenScaffold>

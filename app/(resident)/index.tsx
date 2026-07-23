@@ -6,6 +6,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import {
   Avatar,
   Card,
+  FAB,
   ListRow,
   QuickAction,
   SectionHeader,
@@ -48,7 +49,8 @@ export default function ResidentHome() {
       rightBadge={unread}
       onRightPress={() => router.push('/notifications')}
     >
-      <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
+      <View className="flex-1">
+        <ScrollView contentContainerClassName="gap-6 p-5 pb-28" showsVerticalScrollIndicator={false}>
         {/* Hero: avatar + greeting + today's stats — the visual centerpiece. */}
         <View className="rounded-3xl bg-primary p-5 shadow-sm">
           <View className="flex-row items-center gap-3">
@@ -155,7 +157,14 @@ export default function ResidentHome() {
             onPress={() => router.push('/(resident)/helpdesk')}
           />
         </View>
-      </ScrollView>
+        </ScrollView>
+        <FAB
+          icon="qr-code"
+          label="Pre-approve"
+          color={ACCENTS.teal}
+          onPress={() => router.push('/(resident)/preapprove')}
+        />
+      </View>
     </ScreenScaffold>
   );
 }

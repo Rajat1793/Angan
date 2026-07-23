@@ -5,6 +5,7 @@ export { Button } from './Button';
 export { Card } from './Card';
 export { Empty } from './Empty';
 export { ErrorState } from './Error';
+export { FAB } from './FAB';
 export { Input } from './Input';
 export { ListRow } from './ListRow';
 export { Loading } from './Loading';
