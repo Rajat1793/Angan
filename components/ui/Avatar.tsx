@@ -32,17 +32,19 @@ function colorFor(name: string) {
 interface AvatarProps {
   name?: string | null;
   size?: number;
+  // solid = filled accent background with white initials (for dark surfaces).
+  solid?: boolean;
 }
 
-export function Avatar({ name, size = 40 }: AvatarProps) {
+export function Avatar({ name, size = 40, solid = false }: AvatarProps) {
   const label = name?.trim() || '';
   const color = colorFor(label || '?');
   return (
     <View
       className="items-center justify-center rounded-full"
-      style={{ width: size, height: size, backgroundColor: tint(color) }}
+      style={{ width: size, height: size, backgroundColor: solid ? color : tint(color) }}
     >
-      <Text style={{ color, fontSize: size * 0.4, fontWeight: '700' }}>
+      <Text style={{ color: solid ? '#fff' : color, fontSize: size * 0.4, fontWeight: '700' }}>
         {initials(label || '?')}
       </Text>
     </View>

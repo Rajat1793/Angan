@@ -4,11 +4,12 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import {
+  Avatar,
   Card,
   ListRow,
   QuickAction,
   SectionHeader,
-  StatStrip,
+  Typo,
 } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
@@ -17,6 +18,13 @@ import { useVisitors } from '@/hooks/useVisitors';
 import { ACCENTS } from '@/lib/accents';
 import { listNotices } from '@/lib/community';
 
+// Time-aware greeting for the hero card.
+function greetingFor(hour: number) {
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 export default function ResidentHome() {
   const { profile } = useAuth();
   const { unread } = useNotificationsList();
@@ -24,6 +32,13 @@ export default function ResidentHome() {
   const notices = useQuery({ queryKey: ['notices'], queryFn: listNotices });
   const pendingCount = pending.data?.length ?? 0;
   const firstName = profile?.full_name?.split(' ')[0] ?? 'neighbour';
+  const greeting = greetingFor(new Date().getHours());
+
+  const heroStats = [
+    { label: 'Approvals', value: pendingCount },
+    { label: 'Notices', value: notices.data?.length ?? 0 },
+    { label: 'Alerts', value: unread },
+  ];
 
   return (
     <ScreenScaffold
@@ -34,23 +49,31 @@ export default function ResidentHome() {
       onRightPress={() => router.push('/notifications')}
     >
       <ScrollView contentContainerClassName="gap-6 p-5" showsVerticalScrollIndicator={false}>
-        {/* Greeting hero banner. */}
-        <View className="rounded-2xl bg-primary p-5 shadow-sm">
-          <Text className="text-lg font-bold text-background">Good day, {firstName} ☀️</Text>
-          <Text className="mt-1 text-sm text-background/80">
-            Welcome back to your community.
-          </Text>
+        {/* Hero: avatar + greeting + today's stats — the visual centerpiece. */}
+        <View className="rounded-3xl bg-primary p-5 shadow-sm">
+          <View className="flex-row items-center gap-3">
+            <Avatar name={profile?.full_name} size={48} solid />
+            <View className="flex-1">
+              <Text className="text-xs font-medium uppercase tracking-wide text-background/70">
+                {greeting}
+              </Text>
+              <Typo variant="title" className="text-background">
+                {firstName}
+              </Typo>
+            </View>
+          </View>
+          <View className="mt-5 flex-row border-t border-background/15 pt-4">
+            {heroStats.map((s, i) => (
+              <View
+                key={s.label}
+                className={`flex-1 items-center ${i > 0 ? 'border-l border-background/15' : ''}`}
+              >
+                <Text className="text-2xl font-bold text-background">{s.value}</Text>
+                <Text className="mt-0.5 text-xs text-background/70">{s.label}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-
-        {/* Today summary. */}
-        <StatStrip
-          title="Today"
-          stats={[
-            { label: 'Approvals', value: pendingCount },
-            { label: 'Notices', value: notices.data?.length ?? 0 },
-            { label: 'Alerts', value: unread },
-          ]}
-        />
 
         <View className="gap-3">
           <SectionHeader title="Quick actions" />
