@@ -1,7 +1,7 @@
 // Admin tabs: Dashboard · Residents · Complaints · Notices · Settings.
-import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { tabIcon } from '@/components/shared/tabIcon';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function AdminLayout() {
@@ -18,37 +18,35 @@ export default function AdminLayout() {
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => <Ionicons name="grid" size={size} color={color} />,
+          tabBarIcon: tabIcon('grid'),
         }}
       />
       <Tabs.Screen
         name="residents"
         options={{
           title: 'Residents',
-          tabBarIcon: ({ color, size }) => <Ionicons name="people" size={size} color={color} />,
+          tabBarIcon: tabIcon('people'),
         }}
       />
       <Tabs.Screen
         name="complaints"
         options={{
           title: 'Complaints',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-ellipses" size={size} color={color} />
-          ),
+          tabBarIcon: tabIcon('chatbox-ellipses'),
         }}
       />
       <Tabs.Screen
         name="notices"
         options={{
           title: 'Notices',
-          tabBarIcon: ({ color, size }) => <Ionicons name="megaphone" size={size} color={color} />,
+          tabBarIcon: tabIcon('megaphone'),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Ionicons name="settings" size={size} color={color} />,
+          tabBarIcon: tabIcon('settings'),
         }}
       />
       {/* Ticket detail opened from Complaints, not shown as a tab. */}

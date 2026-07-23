@@ -1,7 +1,7 @@
 // Resident tabs: Home · Approvals · Community · Payments · Profile.
-import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { tabIcon } from '@/components/shared/tabIcon';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function ResidentLayout() {
@@ -18,37 +18,35 @@ export default function ResidentLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+          tabBarIcon: tabIcon('home'),
         }}
       />
       <Tabs.Screen
         name="approvals"
         options={{
           title: 'Approvals',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="checkmark-done-circle" size={size} color={color} />
-          ),
+          tabBarIcon: tabIcon('checkmark-done-circle'),
         }}
       />
       <Tabs.Screen
         name="community"
         options={{
           title: 'Community',
-          tabBarIcon: ({ color, size }) => <Ionicons name="megaphone" size={size} color={color} />,
+          tabBarIcon: tabIcon('megaphone'),
         }}
       />
       <Tabs.Screen
         name="payments"
         options={{
           title: 'Payments',
-          tabBarIcon: ({ color, size }) => <Ionicons name="card" size={size} color={color} />,
+          tabBarIcon: tabIcon('card'),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+          tabBarIcon: tabIcon('person'),
         }}
       />
       {/* Pre-approval is opened from Approvals, not shown as a tab. */}

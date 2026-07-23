@@ -1,7 +1,7 @@
 // Guard tabs: Gate · Visitors · History · Alerts (register is a hidden route).
-import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+import { tabIcon } from '@/components/shared/tabIcon';
 import { useTheme } from '@/hooks/useTheme';
 
 export default function GuardLayout() {
@@ -18,41 +18,35 @@ export default function GuardLayout() {
         name="index"
         options={{
           title: 'Gate',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="shield-checkmark" size={size} color={color} />
-          ),
+          tabBarIcon: tabIcon('shield-checkmark'),
         }}
       />
       <Tabs.Screen
         name="visitors"
         options={{
           title: 'Visitors',
-          tabBarIcon: ({ color, size }) => <Ionicons name="people" size={size} color={color} />,
+          tabBarIcon: tabIcon('people'),
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'History',
-          tabBarIcon: ({ color, size }) => <Ionicons name="time" size={size} color={color} />,
+          tabBarIcon: tabIcon('time'),
         }}
       />
       <Tabs.Screen
         name="alerts"
         options={{
           title: 'Alerts',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="notifications" size={size} color={color} />
-          ),
+          tabBarIcon: tabIcon('notifications'),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings" size={size} color={color} />
-          ),
+          tabBarIcon: tabIcon('settings'),
         }}
       />
       {/* Register + verify are opened from actions, not shown as tabs. */}
