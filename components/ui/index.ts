@@ -12,6 +12,7 @@ export { Loading } from './Loading';
 export { OfflineBanner } from './Offline';
 export { QuickAction } from './QuickAction';
 export { SectionHeader } from './SectionHeader';
+export { Segmented, type SegmentOption } from './Segmented';
 export { Sheet } from './Sheet';
 export { Skeleton, ListSkeleton } from './Skeleton';
 export { StatStrip, type Stat } from './StatStrip';

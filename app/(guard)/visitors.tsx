@@ -4,9 +4,9 @@ import { FlashList } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { RefreshControl, Text, View } from 'react-native';
 
-import { Button, Empty, ErrorState, FAB, Loading, useToast } from '@/components/ui';
+import { Button, Empty, ErrorState, FAB, Loading, Segmented, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
 import { VisitorDetailSheet } from '@/components/visitor/VisitorDetailSheet';
@@ -79,38 +79,15 @@ export default function GuardVisitors() {
       <View className="flex-1">
         {/* Nested status filter tabs. */}
         <View className="border-b border-muted/10">
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerClassName="gap-2 px-4 py-3"
-          >
-            {SEGMENTS.map((s) => {
-              const on = s.key === segment;
-              const count = (data ?? []).filter((v) => s.match(v.status)).length;
-              return (
-                <Pressable
-                  key={s.key}
-                  onPress={() => setSegment(s.key)}
-                  className={`flex-row items-center gap-1.5 rounded-full px-4 py-2 ${
-                    on ? 'bg-primary' : 'bg-muted/10'
-                  }`}
-                >
-                  <Text className={`text-sm font-medium ${on ? 'text-background' : 'text-foreground'}`}>
-                    {s.label}
-                  </Text>
-                  <View
-                    className={`h-5 min-w-5 items-center justify-center rounded-full px-1 ${
-                      on ? 'bg-background/25' : 'bg-muted/20'
-                    }`}
-                  >
-                    <Text className={`text-xs font-bold ${on ? 'text-background' : 'text-foreground/60'}`}>
-                      {count}
-                    </Text>
-                  </View>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+          <Segmented
+            value={segment}
+            onChange={setSegment}
+            options={SEGMENTS.map((s) => ({
+              key: s.key,
+              label: s.label,
+              count: (data ?? []).filter((v) => s.match(v.status)).length,
+            }))}
+          />
         </View>
 
         {/* Filtered visitor list. */}
