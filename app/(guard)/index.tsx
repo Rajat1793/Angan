@@ -9,6 +9,7 @@ import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationsList } from '@/hooks/useNotificationsList';
 import { useVisitors } from '@/hooks/useVisitors';
+import { ACCENTS, tint } from '@/lib/accents';
 
 // A large tappable action tile that grows to fill the grid.
 function BigTile({
@@ -17,20 +18,25 @@ function BigTile({
   subtitle,
   onPress,
   badge,
+  color = '#3E481D',
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle: string;
   onPress: () => void;
   badge?: number;
+  color?: string;
 }) {
   return (
     <Pressable
       onPress={onPress}
       className="flex-1 items-center justify-center gap-4 rounded-3xl border border-muted/10 bg-background p-5 shadow-sm active:opacity-70"
     >
-      <View className="h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
-        <Ionicons name={icon} size={40} color="#3E481D" />
+      <View
+        className="h-20 w-20 items-center justify-center rounded-3xl"
+        style={{ backgroundColor: tint(color) }}
+      >
+        <Ionicons name={icon} size={40} color={color} />
         {badge ? (
           <View className="absolute -right-1.5 -top-1.5 h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-1">
             <Text className="text-xs font-bold text-white">{badge}</Text>
@@ -110,12 +116,14 @@ export default function GuardDashboard() {
               icon="person-add"
               title="Register"
               subtitle="Add a visitor at the gate"
+              color={ACCENTS.blue}
               onPress={() => router.push('/(guard)/register')}
             />
             <BigTile
               icon="qr-code"
               title="Verify"
               subtitle="Scan QR or enter OTP"
+              color={ACCENTS.teal}
               onPress={() => router.push('/(guard)/verify')}
             />
           </View>
@@ -124,6 +132,7 @@ export default function GuardDashboard() {
               icon="people"
               title="Visitors"
               subtitle="Browse & filter by status"
+              color={ACCENTS.indigo}
               badge={insideNow > 0 ? insideNow : undefined}
               onPress={() => router.push('/(guard)/visitors')}
             />
@@ -131,6 +140,7 @@ export default function GuardDashboard() {
               icon="time"
               title="History"
               subtitle="Entry / exit log"
+              color={ACCENTS.slate}
               onPress={() => router.push('/(guard)/history')}
             />
           </View>
@@ -139,12 +149,14 @@ export default function GuardDashboard() {
               icon="clipboard"
               title="Attendance"
               subtitle="Mark daily help"
+              color={ACCENTS.amber}
               onPress={() => router.push('/(guard)/attendance' as never)}
             />
             <BigTile
               icon="cube"
               title="Deliveries"
               subtitle="Parcels at the gate"
+              color={ACCENTS.green}
               onPress={() => router.push('/(guard)/deliveries' as never)}
             />
           </View>

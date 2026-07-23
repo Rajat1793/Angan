@@ -14,6 +14,7 @@ import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationsList } from '@/hooks/useNotificationsList';
 import { useVisitors } from '@/hooks/useVisitors';
+import { ACCENTS } from '@/lib/accents';
 import { listNotices } from '@/lib/community';
 
 export default function ResidentHome() {
@@ -57,22 +58,26 @@ export default function ResidentHome() {
             <QuickAction
               icon="checkmark-done-circle"
               label="Approvals"
+              color={ACCENTS.blue}
               badge={pendingCount > 0 ? pendingCount : undefined}
               onPress={() => router.push('/(resident)/approvals')}
             />
             <QuickAction
               icon="qr-code"
               label="Pre-approve"
+              color={ACCENTS.teal}
               onPress={() => router.push('/(resident)/preapprove')}
             />
             <QuickAction
               icon="calendar"
               label="Amenities"
+              color={ACCENTS.indigo}
               onPress={() => router.push('/(resident)/amenities')}
             />
             <QuickAction
               icon="card"
               label="Payments"
+              color={ACCENTS.green}
               onPress={() => router.push('/(resident)/payments')}
             />
           </View>
@@ -109,18 +114,21 @@ export default function ResidentHome() {
             icon="apps"
             title="Services"
             subtitle="SOS, deliveries, vehicles & more"
+            color={ACCENTS.purple}
             onPress={() => router.push('/(resident)/services' as never)}
           />
           <ListRow
             icon="podium"
             title="Polls"
             subtitle="Vote on society decisions"
+            color={ACCENTS.amber}
             onPress={() => router.push('/(resident)/polls')}
           />
           <ListRow
             icon="chatbox-ellipses"
             title="Raise a helpdesk ticket"
             subtitle="Report an issue to the admin"
+            color={ACCENTS.red}
             onPress={() => router.push('/(resident)/helpdesk')}
           />
         </View>

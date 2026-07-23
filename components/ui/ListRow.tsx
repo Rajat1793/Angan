@@ -2,11 +2,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, Text, View } from 'react-native';
 
+import { tint } from '@/lib/accents';
+
 interface ListRowProps {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle?: string;
   badge?: string | number;
+  color?: string;
   onPress?: () => void;
   showChevron?: boolean;
 }
@@ -16,6 +19,7 @@ export function ListRow({
   title,
   subtitle,
   badge,
+  color = '#3E481D',
   onPress,
   showChevron = true,
 }: ListRowProps) {
@@ -25,8 +29,11 @@ export function ListRow({
       className="flex-row items-center gap-3 rounded-2xl border border-muted/10 bg-background p-3 active:opacity-70"
     >
       {/* Circular tinted icon badge. */}
-      <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-        <Ionicons name={icon} size={18} color="#3E481D" />
+      <View
+        className="h-10 w-10 items-center justify-center rounded-full"
+        style={{ backgroundColor: tint(color) }}
+      >
+        <Ionicons name={icon} size={18} color={color} />
       </View>
       <View className="flex-1">
         <Text className="text-sm font-semibold text-foreground">{title}</Text>
