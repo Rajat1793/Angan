@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 
-import { Button, Card, Input, Loading, useToast } from '@/components/ui';
+import { Avatar, Button, Card, Input, Loading, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { useRealtime } from '@/hooks/useRealtime';
 import { addPostComment, getPost, listPostComments, togglePostLike } from '@/lib/community';
@@ -69,11 +69,14 @@ export default function PostDetail() {
         ListHeaderComponent={
           p ? (
             <Card className="mb-2 gap-2">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-sm font-semibold text-foreground">
-                  {p.author_name ?? 'Member'}
-                </Text>
-                <Text className="text-xs text-foreground/40">{timeLabel(p.created_at)}</Text>
+              <View className="flex-row items-center gap-3">
+                <Avatar name={p.author_name} size={36} />
+                <View className="flex-1">
+                  <Text className="text-sm font-semibold text-foreground">
+                    {p.author_name ?? 'Member'}
+                  </Text>
+                  <Text className="text-xs text-foreground/40">{timeLabel(p.created_at)}</Text>
+                </View>
               </View>
               <Text className="text-base text-foreground/90">{p.body}</Text>
               <View className="flex-row items-center gap-2 pt-1">
@@ -87,12 +90,15 @@ export default function PostDetail() {
           ) : null
         }
         renderItem={({ item }) => (
-          <Card>
-            <Text className="mb-1 text-xs font-semibold text-primary">
-              {item.author_name ?? 'Member'}
-            </Text>
-            <Text className="text-sm text-foreground">{item.body}</Text>
-            <Text className="mt-1 text-xs text-foreground/50">{timeLabel(item.created_at)}</Text>
+          <Card className="flex-row gap-3">
+            <Avatar name={item.author_name} size={32} />
+            <View className="flex-1">
+              <Text className="mb-1 text-xs font-semibold text-primary">
+                {item.author_name ?? 'Member'}
+              </Text>
+              <Text className="text-sm text-foreground">{item.body}</Text>
+              <Text className="mt-1 text-xs text-foreground/50">{timeLabel(item.created_at)}</Text>
+            </View>
           </Card>
         )}
         ListEmptyComponent={

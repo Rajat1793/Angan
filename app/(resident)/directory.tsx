@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
 import { Linking, Pressable, Text, View } from 'react-native';
 
-import { Badge, Card, Empty, ErrorState, Input, ListSkeleton } from '@/components/ui';
+import { Avatar, Badge, Card, Empty, ErrorState, Input, ListSkeleton } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { listDirectory } from '@/lib/society';
 
@@ -47,18 +47,21 @@ export default function Directory() {
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={({ item }) => (
             <Card className="flex-row items-center justify-between">
-              <View className="flex-1">
-                <View className="flex-row items-center gap-2">
-                  <Text className="text-base font-semibold text-foreground">
-                    {item.full_name ?? 'Resident'}
+              <View className="flex-1 flex-row items-center gap-3">
+                <Avatar name={item.full_name} size={40} />
+                <View className="flex-1">
+                  <View className="flex-row items-center gap-2">
+                    <Text className="text-base font-semibold text-foreground">
+                      {item.full_name ?? 'Resident'}
+                    </Text>
+                    {item.role !== 'resident' ? (
+                      <Badge label={item.role} tone="info" />
+                    ) : null}
+                  </View>
+                  <Text className="text-xs text-foreground/50">
+                    {item.flat ? `Flat ${item.flat}` : 'No flat'}
                   </Text>
-                  {item.role !== 'resident' ? (
-                    <Badge label={item.role} tone="info" />
-                  ) : null}
                 </View>
-                <Text className="text-xs text-foreground/50">
-                  {item.flat ? `Flat ${item.flat}` : 'No flat'}
-                </Text>
               </View>
               {item.phone ? (
                 <Pressable onPress={() => Linking.openURL(`tel:${item.phone}`)} hitSlop={8}>
