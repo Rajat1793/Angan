@@ -63,7 +63,7 @@ export default function Approvals() {
       ) : isError ? (
         <ErrorState onRetry={refetch} />
       ) : !data || data.length === 0 ? (
-        <Empty title="No pending approvals" hint="Visitor requests will appear here." />
+        <Empty icon="checkmark-done-circle-outline" title="No pending approvals" hint="Visitor requests will appear here." />
       ) : (
         <FlashList
           data={data}

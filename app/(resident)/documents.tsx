@@ -17,7 +17,7 @@ export default function Documents() {
   return (
     <ScreenScaffold title="Documents" showBack>
       {(docs.data ?? []).length === 0 ? (
-        <Empty title="No documents" hint="Society files will appear here." />
+        <Empty icon="document-text-outline" title="No documents" hint="Society files will appear here." />
       ) : (
         <FlashList
           data={docs.data ?? []}

@@ -61,7 +61,7 @@ export default function Deliveries() {
       {deliveries.isLoading ? (
         <Loading />
       ) : (deliveries.data ?? []).length === 0 ? (
-        <Empty title="No parcels" hint="Logged parcels will appear here." />
+        <Empty icon="cube-outline" title="No parcels" hint="Logged parcels will appear here." />
       ) : (
         <FlashList
           data={deliveries.data ?? []}

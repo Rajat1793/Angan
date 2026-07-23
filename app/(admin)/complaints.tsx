@@ -36,7 +36,7 @@ export default function AdminComplaints() {
   return (
     <ScreenScaffold title="Complaints">
       {(tickets.data ?? []).length === 0 ? (
-        <Empty title="No complaints" hint="Tickets to triage will appear here." />
+        <Empty icon="chatbox-ellipses-outline" title="No complaints" hint="Tickets to triage will appear here." />
       ) : (
         <FlatList
           data={tickets.data ?? []}

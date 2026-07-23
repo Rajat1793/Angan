@@ -118,7 +118,7 @@ export default function GuardVisitors() {
           ) : isError ? (
             <ErrorState onRetry={refetch} />
           ) : filtered.length === 0 ? (
-            <Empty title="No visitors" hint="Nothing matches this filter yet." />
+            <Empty icon="people-outline" title="No visitors" hint="Nothing matches this filter yet." />
           ) : (
             <FlashList
               data={filtered}

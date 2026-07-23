@@ -27,7 +27,7 @@ export default function AdminMoves() {
   return (
     <ScreenScaffold title="Move requests" showBack>
       {(moves.data ?? []).length === 0 ? (
-        <Empty title="No requests" hint="Resident move requests will show here." />
+        <Empty icon="swap-horizontal-outline" title="No requests" hint="Resident move requests will show here." />
       ) : (
         <FlashList
           data={moves.data ?? []}

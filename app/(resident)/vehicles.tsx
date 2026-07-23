@@ -69,7 +69,7 @@ export default function Vehicles() {
         {vehicles.isLoading ? (
           <Loading />
         ) : (vehicles.data ?? []).length === 0 ? (
-          <Empty title="No vehicles" hint="Add your car or bike above." />
+          <Empty icon="car-sport-outline" title="No vehicles" hint="Add your car or bike above." />
         ) : (
           (vehicles.data ?? []).map((v) => (
             <Card key={v.id} className="flex-row items-center justify-between">

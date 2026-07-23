@@ -16,7 +16,7 @@ export default function Notices() {
   return (
     <ScreenScaffold title="Notices" showBack>
       {(notices.data ?? []).length === 0 ? (
-        <Empty title="No notices" hint="Society announcements will appear here." />
+        <Empty icon="megaphone-outline" title="No notices" hint="Society announcements will appear here." />
       ) : (
         <ScrollView contentContainerClassName="gap-3 p-5">
           {(notices.data ?? []).map((n) => (

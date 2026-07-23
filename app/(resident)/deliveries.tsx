@@ -32,7 +32,7 @@ export default function ResidentDeliveries() {
   return (
     <ScreenScaffold title="Deliveries" showBack>
       {mine.length === 0 ? (
-        <Empty title="No parcels" hint="Parcels held at the gate will show here." />
+        <Empty icon="cube-outline" title="No parcels" hint="Parcels held at the gate will show here." />
       ) : (
         <FlashList
           data={mine}

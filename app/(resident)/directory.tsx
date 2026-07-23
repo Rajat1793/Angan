@@ -38,7 +38,7 @@ export default function Directory() {
         <Input placeholder="Search name or flat" value={query} onChangeText={setQuery} />
       </View>
       {filtered.length === 0 ? (
-        <Empty title="No matches" hint="Try a different name or flat." />
+        <Empty icon="search-outline" title="No matches" hint="Try a different name or flat." />
       ) : (
         <FlashList
           data={filtered}

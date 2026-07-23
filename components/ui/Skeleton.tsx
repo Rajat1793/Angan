@@ -1,25 +1,38 @@
-// Skeleton: animated placeholder blocks for loading states.
-import { useEffect, useRef } from 'react';
-import { Animated, View, type ViewStyle } from 'react-native';
+// Skeleton: shimmering placeholder blocks for loading states.
+import { useEffect, useRef, useState } from 'react';
+import { Animated, StyleSheet, View, type ViewStyle } from 'react-native';
 
 export function Skeleton({ style }: { style?: ViewStyle }) {
-  const opacity = useRef(new Animated.Value(0.4)).current;
+  const anim = useRef(new Animated.Value(0)).current;
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
     const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity, { toValue: 1, duration: 700, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 0.4, duration: 700, useNativeDriver: true }),
-      ]),
+      Animated.timing(anim, { toValue: 1, duration: 1100, useNativeDriver: true }),
     );
     loop.start();
     return () => loop.stop();
-  }, [opacity]);
+  }, [anim]);
+
+  // A translucent band sweeps across the block to fake a shimmer sheen.
+  const translateX = anim.interpolate({ inputRange: [0, 1], outputRange: [-width, width] });
 
   return (
-    <Animated.View
-      style={[{ opacity, backgroundColor: 'rgba(120,120,120,0.15)', borderRadius: 12 }, style]}
-    />
+    <View
+      onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
+      style={[
+        { overflow: 'hidden', backgroundColor: 'rgba(120,120,120,0.15)', borderRadius: 12 },
+        style,
+      ]}
+    >
+      {width > 0 ? (
+        <Animated.View style={[StyleSheet.absoluteFill, { transform: [{ translateX }] }]}>
+          <View
+            style={{ width: width * 0.5, height: '100%', backgroundColor: 'rgba(255,255,255,0.35)' }}
+          />
+        </Animated.View>
+      ) : null}
+    </View>
   );
 }
 

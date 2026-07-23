@@ -34,7 +34,7 @@ export default function Polls() {
   return (
     <ScreenScaffold title="Polls" showBack>
       {(polls.data ?? []).length === 0 ? (
-        <Empty title="No active polls" hint="Your society admin will post polls here." />
+        <Empty icon="podium-outline" title="No active polls" hint="Your society admin will post polls here." />
       ) : (
         <ScrollView contentContainerClassName="gap-3 p-5">
           <Text className="text-sm text-foreground/50">

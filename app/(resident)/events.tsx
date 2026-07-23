@@ -41,7 +41,7 @@ export default function Events() {
   return (
     <ScreenScaffold title="Events" showBack>
       {(events.data ?? []).length === 0 ? (
-        <Empty title="No events" hint="Upcoming community events will show here." />
+        <Empty icon="calendar-outline" title="No events" hint="Upcoming community events will show here." />
       ) : (
         <FlashList
           data={events.data ?? []}

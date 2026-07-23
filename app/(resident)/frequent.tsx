@@ -69,7 +69,7 @@ export default function Frequent() {
         {list.isLoading ? (
           <Loading />
         ) : (list.data ?? []).length === 0 ? (
-          <Empty title="No saved visitors" hint="Save regulars to invite them faster." />
+          <Empty icon="people-outline" title="No saved visitors" hint="Save regulars to invite them faster." />
         ) : (
           (list.data ?? []).map((f) => (
             <Card key={f.id} className="flex-row items-center justify-between">

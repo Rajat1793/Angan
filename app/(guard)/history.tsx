@@ -46,7 +46,7 @@ export default function GuardHistory() {
       ) : isError ? (
         <ErrorState onRetry={refetch} />
       ) : filtered.length === 0 ? (
-        <Empty title="No history yet" hint="Past visitors will be listed here." />
+        <Empty icon="time-outline" title="No history yet" hint="Past visitors will be listed here." />
       ) : (
         <FlashList
           data={filtered}

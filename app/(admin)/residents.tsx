@@ -15,7 +15,7 @@ export default function AdminResidents() {
   return (
     <ScreenScaffold title="Residents">
       {(residents.data ?? []).length === 0 ? (
-        <Empty title="No residents loaded" hint="Manage residents and flats here." />
+        <Empty icon="people-outline" title="No residents loaded" hint="Manage residents and flats here." />
       ) : (
         <FlatList
           data={residents.data ?? []}

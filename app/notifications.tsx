@@ -37,7 +37,7 @@ export default function NotificationsScreen() {
       ) : isError ? (
         <ErrorState onRetry={refetch} />
       ) : !data || data.length === 0 ? (
-        <Empty title="No notifications" hint="Activity alerts will appear here." />
+        <Empty icon="notifications-outline" title="No notifications" hint="Activity alerts will appear here." />
       ) : (
         <FlashList
           data={data}

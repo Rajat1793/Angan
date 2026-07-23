@@ -38,7 +38,7 @@ export default function GuardAlerts() {
   return (
     <ScreenScaffold title="Alerts" subtitle="Emergency SOS" rightIcon="refresh" onRightPress={() => invalidate()}>
       {(alerts.data ?? []).length === 0 ? (
-        <Empty title="No alerts" hint="Emergency SOS alerts will show here." />
+        <Empty icon="warning-outline" title="No alerts" hint="Emergency SOS alerts will show here." />
       ) : (
         <FlashList
           data={alerts.data ?? []}
