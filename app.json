@@ -14,7 +14,8 @@
     "updates": {
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 30000
+      "fallbackToCacheTimeout": 30000,
+      "url": "https://u.expo.dev/c5a1e9c0-347f-4063-89a2-404b6e5a31dc"
     },
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -35,6 +36,10 @@
         "backgroundColor": "#FCFDF3"
       },
       "permissions": [
+        "CAMERA",
+        "INTERNET",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
         "CAMERA",
         "INTERNET",
         "android.permission.CAMERA",
