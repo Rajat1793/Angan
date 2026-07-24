@@ -66,7 +66,7 @@ export function SettingsPanel() {
     const res = await checkForOtaUpdate();
     setChecking(false);
     if (res === 'current') toast("You're on the latest version", 'success');
-    else if (res === 'unavailable') toast('Updates apply to production builds', 'info');
+    else if (res === 'unavailable') toast('This build can’t receive OTA updates', 'info');
     // 'updated' reloads the app automatically.
   };
 
