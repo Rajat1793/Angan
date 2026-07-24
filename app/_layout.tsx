@@ -16,12 +16,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNotifications } from '@/hooks/useNotifications';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { queryClient } from '@/lib/query';
+import { useSettingsStore } from '@/store/settings.store';
 
 // Redirects users to the correct group based on session + profile role.
 function AuthGate() {
   const { session, profile, hydrating } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+  const introSeen = useSettingsStore((s) => s.introSeen);
 
   // Register for push once a profile is available.
   useNotifications();
@@ -30,9 +32,14 @@ function AuthGate() {
     if (hydrating) return;
     const group = segments[0];
     const inAuth = group === '(auth)';
-    // Signed out → force auth group.
+    const onIntro = (segments[1] as string) === 'intro';
+    // Signed out → onboarding intro on first run, otherwise the login screen.
     if (!session) {
-      if (!inAuth) router.replace('/(auth)/login');
+      if (!introSeen) {
+        if (!onIntro) router.replace('/(auth)/intro' as never);
+        return;
+      }
+      if (!inAuth || onIntro) router.replace('/(auth)/login');
       return;
     }
     // Signed in but profile incomplete → onboarding.
@@ -52,7 +59,7 @@ function AuthGate() {
             : '(resident)';
       if (group === undefined || group === '(auth)') router.replace(`/${target}`);
     }
-  }, [session, profile, hydrating, segments, router]);
+  }, [session, profile, hydrating, segments, router, introSeen]);
 
   if (hydrating) return <Loading label="Starting Angan…" />;
 
