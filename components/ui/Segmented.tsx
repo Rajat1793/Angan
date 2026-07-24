@@ -48,12 +48,11 @@ export function Segmented({
             return (
               <Pressable
                 key={o.key}
-                onLayout={(e) =>
-                  setLayouts((prev) => ({
-                    ...prev,
-                    [o.key]: { x: e.nativeEvent.layout.x, width: e.nativeEvent.layout.width },
-                  }))
-                }
+                onLayout={(e) => {
+                  // Read the pooled event synchronously before the async setState.
+                  const { x, width } = e.nativeEvent.layout;
+                  setLayouts((prev) => ({ ...prev, [o.key]: { x, width } }));
+                }}
                 onPress={() => onChange(o.key)}
                 className="flex-row items-center gap-1.5 rounded-full px-4 py-2 active:opacity-70"
               >

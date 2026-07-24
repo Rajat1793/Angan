@@ -21,7 +21,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#FCFDF3"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.angan.mobile"
@@ -32,14 +34,27 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FCFDF3"
       },
-      "permissions": ["CAMERA", "INTERNET"]
+      "permissions": [
+        "CAMERA",
+        "INTERNET",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
       "expo-camera",
       "expo-notifications",
-      "expo-updates"
+      "expo-updates",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "ndkVersion": "27.1.12297006"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -51,8 +66,10 @@
       "supabaseUrl": "",
       "supabaseAnonKey": "",
       "eas": {
-        "projectId": ""
-      }
-    }
+        "projectId": "c5a1e9c0-347f-4063-89a2-404b6e5a31dc"
+      },
+      "router": {}
+    },
+    "owner": "rajat17"
   }
 }

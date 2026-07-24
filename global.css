@@ -12,13 +12,12 @@
     --color-foreground: 27 28 21; /* #1B1C15 */
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      /* Dark mode: palette inverts cleanly against light. */
-      --color-primary: 192 203 169; /* #C0CBA9 */
-      --color-muted: 226 227 218; /* #E2E3DA @ 20% via /20 */
-      --color-background: 27 28 21; /* #1B1C15 */
-      --color-foreground: 226 227 218; /* #E2E3DA */
-    }
+  /* Class strategy: applied when NativeWind sets the `dark` class, so the
+     in-app light/dark toggle controls tokens regardless of the OS setting. */
+  .dark:root {
+    --color-primary: 192 203 169; /* #C0CBA9 */
+    --color-muted: 226 227 218; /* #E2E3DA @ 20% via /20 */
+    --color-background: 27 28 21; /* #1B1C15 */
+    --color-foreground: 226 227 218; /* #E2E3DA */
   }
 }

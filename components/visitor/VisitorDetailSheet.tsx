@@ -14,6 +14,7 @@ import { Image, Text, View } from 'react-native';
 import { Badge } from '@/components/ui';
 import { VisitorTimeline } from '@/components/visitor/VisitorTimeline';
 import { useFlats } from '@/hooks/useFlats';
+import { useTheme } from '@/hooks/useTheme';
 import type { Visitor, VisitorStatus } from '@/lib/database.types';
 
 const statusTone: Record<VisitorStatus, 'neutral' | 'success' | 'warning' | 'danger' | 'info'> = {
@@ -40,6 +41,7 @@ const fmt = (t: string | null) => (t ? new Date(t).toLocaleString() : '—');
 
 export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visitor | null }>(
   ({ visitor }, ref) => {
+    const { colors } = useTheme();
     // Resolve the visited flat's block/number label (e.g. A-101).
     const { data: flats } = useFlats(visitor?.society_id);
     const flatLabel = useMemo(
@@ -66,8 +68,8 @@ export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visito
         enablePanDownToClose
         enableDynamicSizing
         backdropComponent={renderBackdrop}
-        backgroundStyle={{ backgroundColor: '#FCFDF3' }}
-        handleIndicatorStyle={{ backgroundColor: '#3E481D' }}
+        backgroundStyle={{ backgroundColor: colors.background }}
+        handleIndicatorStyle={{ backgroundColor: colors.primary }}
       >
         <BottomSheetScrollView contentContainerClassName="gap-1 p-5 pb-10">
           {visitor ? (

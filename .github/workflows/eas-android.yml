@@ -1,0 +1,95 @@
+# Builds the Android app on EAS (Expo's cloud) with the "preview" profile
+# (internal-distribution APK), downloads the artifact, and publishes it so
+# testers can install it from EAS's internal-distribution page AND from this
+# repo's GitHub Releases.
+#
+# Trigger options:
+#   • Actions tab → "EAS Android Build" → Run workflow
+#       - profile:     preview (default) | production | development
+#       - release_tag: optional, e.g. v1.0.1 → also publishes a GitHub Release
+#   • git tag v1.0.0 && git push origin v1.0.0   → auto-publishes a Release
+#
+# One-time setup:
+#   1. eas login && eas init                     # links the project (writes extra.eas.projectId)
+#   2. eas build -p android --profile preview     # first build provisions the signing keystore
+#   3. expo.dev → Account → Access tokens → create a token
+#   4. Repo → Settings → Secrets and variables → Actions → add:  EXPO_TOKEN
+#   5. (optional) make Supabase values available to the build as EAS secrets:
+#        eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --value https://<project>.supabase.co
+#        eas secret:create --name EXPO_PUBLIC_SUPABASE_KEY --value <anon-key>
+
+name: EAS Android Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "EAS build profile (preview = internal APK)"
+        required: false
+        default: "preview"
+      release_tag:
+        description: "Optional tag to publish a GitHub Release (e.g. v1.0.1). Blank = artifact only."
+        required: false
+        default: ""
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eas-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Set up EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build APK on EAS and download it
+        run: |
+          mkdir -p dist
+          eas build \
+            --platform android \
+            --profile ${{ github.event.inputs.profile || 'preview' }} \
+            --non-interactive --wait \
+            --output dist/angan.apk
+
+      - name: Name the APK with the app version
+        run: |
+          VERSION=$(node -p "require('./app.json').expo.version")
+          mv dist/angan.apk "dist/angan-v${VERSION}.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angan-apk
+          path: dist/*.apk
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: ${{ startsWith(github.ref, 'refs/tags/') || github.event.inputs.release_tag != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.release_tag || github.ref_name }}
+          name: Angan ${{ github.event.inputs.release_tag || github.ref_name }}
+          files: dist/*.apk
+          generate_release_notes: true

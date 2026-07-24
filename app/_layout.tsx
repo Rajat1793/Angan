@@ -5,6 +5,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useColorScheme as useNativewindColorScheme } from 'nativewind';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,6 +18,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { queryClient } from '@/lib/query';
 import { useSettingsStore } from '@/store/settings.store';
+import { useThemeStore } from '@/store/theme.store';
 
 // Redirects users to the correct group based on session + profile role.
 function AuthGate() {
@@ -78,13 +80,21 @@ function AuthGate() {
 }
 
 export default function RootLayout() {
+  // Keep NativeWind's color scheme in sync with the user's theme choice so
+  // every `className` token (bg-background, text-foreground, …) switches too.
+  const scheme = useThemeStore((s) => s.scheme);
+  const { colorScheme, setColorScheme } = useNativewindColorScheme();
+  useEffect(() => {
+    setColorScheme(scheme);
+  }, [scheme, setColorScheme]);
+
   // Providers wrap every route group; gesture root is required by bottom-sheet.
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <SafeAreaProvider>
           <BottomSheetModalProvider>
-            <StatusBar style="auto" />
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <ConnectivityBanner />
             {isSupabaseConfigured ? <AuthGate /> : <ConfigNotice />}
             <ToastHost />

@@ -4,6 +4,7 @@ import { forwardRef } from 'react';
 import { Text, View } from 'react-native';
 
 import { Button } from '@/components/ui';
+import { useTheme } from '@/hooks/useTheme';
 import type { Visitor } from '@/lib/database.types';
 
 interface ApprovalSheetProps {
@@ -15,37 +16,41 @@ interface ApprovalSheetProps {
 
 // Ref-driven sheet: the screen expands it when a visitor is tapped.
 export const ApprovalSheet = forwardRef<BottomSheet, ApprovalSheetProps>(
-  ({ visitor, onApprove, onDeny, busy }, ref) => (
-    <BottomSheet
-      ref={ref}
-      index={-1}
-      enablePanDownToClose
-      backgroundStyle={{ backgroundColor: '#FCFDF3' }}
-    >
-      <BottomSheetView className="gap-4 p-5">
-        {visitor ? (
-          <>
-            <View className="gap-1">
-              <Text className="text-xl font-bold text-foreground">{visitor.name}</Text>
-              <Text className="text-sm text-foreground/60">
-                {visitor.type} · {visitor.purpose ?? '—'}
-              </Text>
-              {visitor.phone ? (
-                <Text className="text-sm text-foreground/60">{visitor.phone}</Text>
-              ) : null}
-            </View>
-            <View className="flex-row gap-3">
-              <View className="flex-1">
-                <Button label="Deny" variant="outline" onPress={onDeny} loading={busy} />
+  ({ visitor, onApprove, onDeny, busy }, ref) => {
+    const { colors } = useTheme();
+    return (
+      <BottomSheet
+        ref={ref}
+        index={-1}
+        enablePanDownToClose
+        backgroundStyle={{ backgroundColor: colors.background }}
+        handleIndicatorStyle={{ backgroundColor: colors.primary }}
+      >
+        <BottomSheetView className="gap-4 p-5">
+          {visitor ? (
+            <>
+              <View className="gap-1">
+                <Text className="text-xl font-bold text-foreground">{visitor.name}</Text>
+                <Text className="text-sm text-foreground/60">
+                  {visitor.type} · {visitor.purpose ?? '—'}
+                </Text>
+                {visitor.phone ? (
+                  <Text className="text-sm text-foreground/60">{visitor.phone}</Text>
+                ) : null}
               </View>
-              <View className="flex-1">
-                <Button label="Approve" onPress={onApprove} loading={busy} />
+              <View className="flex-row gap-3">
+                <View className="flex-1">
+                  <Button label="Deny" variant="outline" onPress={onDeny} loading={busy} />
+                </View>
+                <View className="flex-1">
+                  <Button label="Approve" onPress={onApprove} loading={busy} />
+                </View>
               </View>
-            </View>
-          </>
-        ) : null}
-      </BottomSheetView>
-    </BottomSheet>
-  ),
+            </>
+          ) : null}
+        </BottomSheetView>
+      </BottomSheet>
+    );
+  },
 );
 ApprovalSheet.displayName = 'ApprovalSheet';
