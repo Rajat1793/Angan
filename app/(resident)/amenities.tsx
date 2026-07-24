@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { Button, Card, ErrorState, Loading, useToast } from '@/components/ui';
+import { Button, Card, ErrorState, Loading, useSuccess, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { bookSlot, cancelBooking, listAmenities, type AmenityWithSlots } from '@/lib/amenities';
 import { useAuthStore } from '@/store/auth.store';
@@ -96,6 +96,7 @@ export default function Amenities() {
   const profile = useAuthStore((s) => s.profile);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
+  const celebrate = useSuccess((s) => s.celebrate);
 
   const amenities = useQuery({
     queryKey: ['amenities'],
@@ -108,7 +109,7 @@ export default function Amenities() {
     try {
       await bookSlot(slotId);
       queryClient.invalidateQueries({ queryKey: ['amenities'] });
-      toast('Booked', 'success');
+      celebrate('Slot booked');
     } catch (e) {
       toast((e as Error).message ?? 'Slot is full', 'error');
     }

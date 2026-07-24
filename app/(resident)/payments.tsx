@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { Modal, ScrollView, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { Badge, Button, Card, DonutChart, ErrorState, Loading, useToast } from '@/components/ui';
+import { Badge, Button, Card, DonutChart, ErrorState, Loading, useSuccess, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { ACCENTS, tint } from '@/lib/accents';
 import type { DueStatus } from '@/lib/database.types';
@@ -23,6 +23,7 @@ export default function Payments() {
   const profile = useAuthStore((s) => s.profile);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
+  const celebrate = useSuccess((s) => s.celebrate);
   const [checkout, setCheckout] = useState<{ html: string; dueId: string; orderId: string } | null>(null);
 
   const dues = useQuery({ queryKey: ['dues'], queryFn: listDues });
@@ -73,7 +74,7 @@ export default function Payments() {
         signature: msg.response.razorpay_signature,
       });
       if (res.verified) {
-        toast('Payment successful', 'success');
+        celebrate('Payment successful');
         queryClient.invalidateQueries({ queryKey: ['dues'] });
         queryClient.invalidateQueries({ queryKey: ['payments'] });
       } else {

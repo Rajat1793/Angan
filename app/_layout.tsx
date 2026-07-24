@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { Loading, ToastHost } from '@/components/ui';
+import { Loading, SuccessHost, ToastHost } from '@/components/ui';
 import { ConfigNotice } from '@/components/shared/ConfigNotice';
 import { ConnectivityBanner } from '@/components/shared/ConnectivityBanner';
 import { useAuth } from '@/hooks/useAuth';
@@ -78,6 +78,7 @@ export default function RootLayout() {
             <ConnectivityBanner />
             {isSupabaseConfigured ? <AuthGate /> : <ConfigNotice />}
             <ToastHost />
+            <SuccessHost />
           </BottomSheetModalProvider>
         </SafeAreaProvider>
       </QueryClientProvider>

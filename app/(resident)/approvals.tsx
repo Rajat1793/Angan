@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-import { Button, Empty, ErrorState, Loading, useToast } from '@/components/ui';
+import { Button, Empty, ErrorState, Loading, useSuccess, useToast } from '@/components/ui';
 import { ScreenScaffold } from '@/components/shared/ScreenScaffold';
 import { ApprovalSheet } from '@/components/visitor/ApprovalSheet';
 import { VisitorCard } from '@/components/visitor/VisitorCard';
@@ -19,6 +19,7 @@ export default function Approvals() {
   const { data, isLoading, isError, refetch } = useVisitors(['pending']);
   const queryClient = useQueryClient();
   const toast = useToast((s) => s.show);
+  const celebrate = useSuccess((s) => s.celebrate);
   const sheetRef = useRef<BottomSheet>(null);
   const [selected, setSelected] = useState<Visitor | null>(null);
   const [busy, setBusy] = useState(false);
@@ -39,7 +40,8 @@ export default function Approvals() {
       // Tactile confirmation matches the visual toast.
       if (approved) hapticSuccess();
       else hapticWarning();
-      toast(approved ? 'Approved' : 'Denied', approved ? 'success' : 'info');
+      if (approved) celebrate('Visitor approved');
+      else toast('Denied', 'info');
       sheetRef.current?.close();
     } catch (e) {
       toast((e as Error).message ?? 'Action failed', 'error');

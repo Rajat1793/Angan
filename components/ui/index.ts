@@ -17,5 +17,6 @@ export { Segmented, type SegmentOption } from './Segmented';
 export { Sheet } from './Sheet';
 export { Skeleton, ListSkeleton } from './Skeleton';
 export { StatStrip, type Stat } from './StatStrip';
+export { SuccessHost, useSuccess } from './Success';
 export { ToastHost, useToast } from './Toast';
 export { Typo, type TypoVariant } from './Typo';
