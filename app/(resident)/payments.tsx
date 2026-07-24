@@ -61,7 +61,15 @@ export default function Payments() {
     const msg = JSON.parse(raw) as {
       type: string;
       response?: { razorpay_payment_id: string; razorpay_signature: string };
+      error?: { description?: string };
     };
+    // Razorpay reported a failed payment (card declined, etc.).
+    if (msg.type === 'failed') {
+      setCheckout(null);
+      toast(msg.error?.description ?? 'Payment failed', 'error');
+      return;
+    }
+    // Dismissed or anything other than a clean success closes the sheet.
     if (msg.type !== 'success' || !checkout || !msg.response) {
       setCheckout(null);
       return;
@@ -80,6 +88,8 @@ export default function Payments() {
       } else {
         toast('Verification failed', 'error');
       }
+    } catch (e) {
+      toast((e as Error).message ?? 'Verification failed', 'error');
     } finally {
       setCheckout(null);
     }

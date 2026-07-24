@@ -12,7 +12,11 @@ interface VerifyBody {
 Deno.serve(async (req) => {
   try {
     const body = (await req.json()) as VerifyBody;
-    const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!;
+    if (!body?.orderId || !body?.paymentId || !body?.signature || !body?.dueId) {
+      throw new Error('Missing verification fields');
+    }
+    const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET');
+    if (!keySecret) throw new Error('Razorpay secret is not configured on the server');
 
     // Recompute HMAC(order_id|payment_id) and compare to the client signature.
     const expected = createHmac('sha256', keySecret)

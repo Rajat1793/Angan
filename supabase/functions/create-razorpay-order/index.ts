@@ -22,8 +22,11 @@ Deno.serve(async (req) => {
     if (due.status === 'paid') throw new Error('Already paid');
 
     // Amount is in paise for Razorpay.
-    const keyId = Deno.env.get('RAZORPAY_KEY_ID')!;
-    const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!;
+    const keyId = Deno.env.get('RAZORPAY_KEY_ID');
+    const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET');
+    if (!keyId || !keySecret) {
+      throw new Error('Razorpay keys are not configured on the server');
+    }
     const orderRes = await fetch('https://api.razorpay.com/v1/orders', {
       method: 'POST',
       headers: {
@@ -37,6 +40,10 @@ Deno.serve(async (req) => {
       }),
     });
     const order = await orderRes.json();
+    // Surface Razorpay's own error instead of returning a malformed order.
+    if (!orderRes.ok || !order?.id) {
+      throw new Error(order?.error?.description ?? 'Failed to create Razorpay order');
+    }
 
     return new Response(JSON.stringify({ order, keyId }), {
       headers: { 'Content-Type': 'application/json' },

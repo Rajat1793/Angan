@@ -31,6 +31,10 @@ export function buildCheckoutHtml(params: {
         }
       };
       var rzp = new Razorpay(options);
+      // Relay a hard failure (declined card, etc.) so the app can react.
+      rzp.on('payment.failed', function (resp) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'failed', error: resp.error }));
+      });
       rzp.open();
     </script>
   </body>
