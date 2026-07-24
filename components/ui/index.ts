@@ -3,6 +3,7 @@ export { Avatar } from './Avatar';
 export { Badge } from './Badge';
 export { Button } from './Button';
 export { Card } from './Card';
+export { DonutChart, type DonutSegment } from './DonutChart';
 export { Empty } from './Empty';
 export { ErrorState } from './Error';
 export { FAB } from './FAB';
