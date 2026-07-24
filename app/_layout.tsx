@@ -57,12 +57,15 @@ function AuthGate() {
   if (hydrating) return <Loading label="Starting Angan…" />;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false, animation: 'fade', animationDuration: 200 }}>
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(resident)" />
       <Stack.Screen name="(guard)" />
       <Stack.Screen name="(admin)" />
-      <Stack.Screen name="notifications" options={{ presentation: 'modal' }} />
+      <Stack.Screen
+        name="notifications"
+        options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+      />
     </Stack>
   );
 }
