@@ -1,10 +1,9 @@
 // Welcome + login screen: branded olive hero, email/password sign-in, and
 // one-tap demo logins.
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Ionicons } from '@expo/vector-icons';
 import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Input, useToast } from '@/components/ui';
@@ -56,9 +55,11 @@ export default function Login() {
       <ScrollView contentContainerClassName="gap-6 px-6 pb-10" showsVerticalScrollIndicator={false}>
         {/* Branded hero. */}
         <View className="items-center gap-3 rounded-b-[36px] bg-primary/10 pb-6 pt-8">
-          <View className="h-20 w-20 items-center justify-center rounded-3xl bg-primary shadow-sm">
-            <Ionicons name="home" size={40} color="#FCFDF3" />
-          </View>
+          <Image
+            source={require('../../assets/logo-mark.png')}
+            className="h-24 w-24"
+            resizeMode="contain"
+          />
           <View className="items-center">
             <Text className="text-3xl font-bold text-primary">Angan</Text>
             <Text className="text-sm font-medium text-foreground/50">The Modern Courtyard</Text>
