@@ -12,6 +12,7 @@ import { forwardRef, useCallback, useMemo } from 'react';
 import { Image, Text, View } from 'react-native';
 
 import { Badge } from '@/components/ui';
+import { VisitorTimeline } from '@/components/visitor/VisitorTimeline';
 import { useFlats } from '@/hooks/useFlats';
 import type { Visitor, VisitorStatus } from '@/lib/database.types';
 
@@ -91,6 +92,11 @@ export const VisitorDetailSheet = forwardRef<BottomSheetModal, { visitor: Visito
               <Row icon="log-out" label="Exit" value={fmt(visitor.exit_at)} />
               <Row icon="time" label="Created" value={fmt(visitor.created_at)} />
               {visitor.otp ? <Row icon="key" label="OTP" value={visitor.otp} /> : null}
+
+              <Text className="mb-1 mt-4 text-xs font-medium uppercase tracking-wide text-foreground/50">
+                Status timeline
+              </Text>
+              <VisitorTimeline visitor={visitor} />
             </>
           ) : null}
         </BottomSheetScrollView>
