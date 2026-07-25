@@ -6,6 +6,17 @@ A mobile-first apartment-community app that moves gate calls, WhatsApp coordinat
 
 Built with **Expo SDK 55** (React Native 0.83, React 19.2) + **Supabase** (Postgres, RLS, Realtime, Storage, Edge Functions). Multi-tenant by design: every row is scoped to a `society_id` and enforced by Row-Level Security.
 
+## Screenshots
+
+<p align="center">
+  <img src="store-assets/real/res-home.png" alt="Home dashboard" width="200" />
+  <img src="store-assets/real/res-community.png" alt="Community feed" width="200" />
+  <img src="store-assets/real/res-payments.png" alt="Maintenance dues & payments" width="200" />
+  <img src="store-assets/real/res-amenities.png" alt="Amenity booking" width="200" />
+</p>
+
+<p align="center"><sub>Resident experience — Home · Community · Payments · Amenities</sub></p>
+
 ## Roles
 
 | Role | Can do |
