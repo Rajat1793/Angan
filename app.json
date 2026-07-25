@@ -36,13 +36,10 @@
         "backgroundColor": "#FCFDF3"
       },
       "permissions": [
-        "CAMERA",
-        "INTERNET",
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "CAMERA",
-        "INTERNET",
-        "android.permission.CAMERA",
+        "android.permission.INTERNET"
+      ],
+      "blockedPermissions": [
         "android.permission.RECORD_AUDIO"
       ]
     },

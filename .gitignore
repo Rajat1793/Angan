@@ -24,3 +24,6 @@ GoogleService-Info.plist
 npm-debug.*
 *.log
 .vscode/
+
+# Google Play service account key (for eas submit) — never commit
+google-service-account.json
